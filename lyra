@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Part of lyra-cli project.
+ *
+ * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
+ * @license    __LICENSE__
+ */
+
+use Lyrasoft\Cli\{
+    Application,
+    Command\PstormCommand
+};
+
+require __DIR__ . '/vendor/autoload.php';
+
+$app = new Application();
+
+// Register commands
+$app->addCommand(PstormCommand::class);
+
+try {
+    $code = $app->execute();
+} catch (\Throwable $e) {
+    echo $e;
+    exit(255);
+}
+
+exit($code);

@@ -1,0 +1,26 @@
+{
+    "name": "lyrasoft/cli",
+    "description": "LYRASOFT CLI",
+    "minimum-stability": "beta",
+    "type": "tool",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon Asika",
+            "email": "asika32764@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "windwalker/console": "~3.0",
+        "roave/security-advisories": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lyrasoft\\Cli\\": "src/"
+        }
+    },
+    "bin": [
+        "lyra"
+    ]
+}
