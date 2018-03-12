@@ -49,7 +49,7 @@ class PushConfigCommand extends Command
      */
     protected function init()
     {
-
+        //
     }
 
     /**
@@ -58,9 +58,18 @@ class PushConfigCommand extends Command
      * @return int
      *
      * @since  2.0
+     * @throws \RuntimeException
      */
     protected function doExecute()
     {
-        return parent::doExecute();
+        $configs = [
+            'fileTemplate' => $this->getOptions('f'),
+            'codestyles' => $this->getOption('c'),
+            'templates' => $this->getOptions('l')
+        ];
+
+        if (!\in_array(true, $configs, true)) {
+            throw new \RuntimeException('Please provide at least one config name or use -a|--all to handle all supported configs.');
+        }
     }
 }
