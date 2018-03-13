@@ -7,3 +7,4 @@ Thumbs.db
 
 # Project
 /vendor
+composer.lock
