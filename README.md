@@ -44,7 +44,7 @@ source ~/.bash_profile
 lyra-cli 的目錄在 `vendor/lyrasoft/cli` 內，將 `cli` 目錄移除，直接 git clone lyra-cli 的專案過來取代，就能一邊開發一邊測試了，
 開發完可以直接 git push。 (別忘了先 fork)
 
-### Command 的編寫方市
+### Command 的編寫方式
 
 最上層 Command 請寫好 class 之後，註冊在 `/lyra` 檔案內。
 
