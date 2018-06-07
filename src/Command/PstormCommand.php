@@ -8,6 +8,7 @@
 
 namespace Lyrasoft\Cli\Command;
 
+use Lyrasoft\Cli\Command\Pstorm\PullConfigCommand;
 use Lyrasoft\Cli\Command\Pstorm\PushConfigCommand;
 use Lyrasoft\Cli\Ioc;
 use Windwalker\Console\Command\Command;
@@ -60,33 +61,8 @@ class PstormCommand extends Command
      */
     protected function init()
     {
-        $this->addCommand(Ioc::createSharedObject(PushConfigCommand::class, ['name' => null, 'parent' => null]));
-
-        // Options
-        $this->addGlobalOption('f')
-            ->alias('file-template')
-            ->description('File Template')
-            ->defaultValue(0);
-
-        $this->addGlobalOption('l')
-            ->alias('live-template')
-            ->description('Live Template')
-            ->defaultValue(0);
-
-        $this->addGlobalOption('c')
-            ->alias('code-style')
-            ->description('Code Style')
-            ->defaultValue(0);
-
-        $this->addGlobalOption('a')
-            ->alias('all')
-            ->description('All types')
-            ->defaultValue(0);
-
-        $this->addGlobalOption('g')
-            ->alias('global')
-            ->description('Use global phpstorm config')
-            ->defaultValue(0);
+        $this->addCommand(PushConfigCommand::class);
+        $this->addCommand(PullConfigCommand::class);
     }
 
     /**

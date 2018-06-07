@@ -23,21 +23,21 @@ use Windwalker\Filesystem\Folder;
  *
  * @since  __DEPLOY_VERSION__
  */
-class PushConfigCommand extends Command
+class PullConfigCommand extends Command
 {
     /**
      * Property name.
      *
      * @var  string
      */
-    protected $name = 'push-config';
+    protected $name = 'pull-config';
 
     /**
      * Property description.
      *
      * @var  string
      */
-    protected $description = 'Push config to repository.';
+    protected $description = 'Pull config to my phpstorm or project.';
 
     /**
      * The manual about this command.
@@ -77,6 +77,11 @@ class PushConfigCommand extends Command
             ->alias('all')
             ->description('All types')
             ->defaultValue(0);
+
+        $this->addGlobalOption('g')
+            ->alias('global')
+            ->description('Use global phpstorm config')
+            ->defaultValue(0);
     }
 
     /**
@@ -100,7 +105,9 @@ class PushConfigCommand extends Command
             throw new \RuntimeException('Please provide at least one config name or use -a|--all to handle all supported configs.');
         }
 
-        $this->out('You will push these configs:');
+        $global = $this->getOption('g');
+
+        $this->out(sprintf('You will pull these configs to <comment>%s</comment>:', $global ? 'PhpStorm global config' : 'Current Project'));
 
         foreach ($configs as $configName => $enabled) {
             $this->out(sprintf('    - <info>%s</info>', $configName));
@@ -108,7 +115,7 @@ class PushConfigCommand extends Command
 
         $this->out(); // New line
 
-        $configFolder = PhpStormHelper::getConfigFolder();
+        $configFolder = $global ? PhpStormHelper::getConfigFolder() : getcwd() . '/.idea';
         
         GithubHelper::prepareRepo();
 
@@ -117,24 +124,22 @@ class PushConfigCommand extends Command
                 continue;
             }
 
-            $this->out()->out(sprintf('## Start Push: <comment>%s</comment>', $configName))->out();
+            $this->out()->out(sprintf('## Start Copy: <comment>%s</comment>', $configName))->out();
 
-            $files = Folder::files($configFolder . '/' . $configName, true, Folder::PATH_RELATIVE);
+            $files = Folder::files(LYRA_TMP . '/' . DevtoolsHelper::TMP_FOLDER . '/Editor/PHPStorm/' . $configName, true, Folder::PATH_RELATIVE);
 
             foreach ($files as $file) {
-                $srcFile = $configFolder . '/' . $configName . '/' . $file;
+                $srcFile = LYRA_TMP . '/' . DevtoolsHelper::TMP_FOLDER . '/Editor/PHPStorm/' . $configName . '/' . $file;
 
-                $destFile = LYRA_TMP . '/' . DevtoolsHelper::TMP_FOLDER . '/Editor/PHPStorm/' . $configName . '/' . $file;
+                $destFile = $configFolder . '/' . $configName . '/' . $file;
 
-                $this->out(sprintf('[Updated] <info>%s</info>', $srcFile));
+                $this->out(sprintf('[Updated] <info>%s</info>', $destFile));
 
                 File::write($destFile, file_get_contents($srcFile));
             }
         }
 
-        GithubHelper::pushRepo();
-
-        $this->out('Push completed');
+        $this->out('Update config completed');
 
         return true;
     }
