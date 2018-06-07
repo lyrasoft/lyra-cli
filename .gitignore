@@ -1,6 +1,7 @@
 # General
 .DS_Store
 Thumbs.db
+/tmp/*
 !.gitkeep
 
 # IDE
@@ -8,5 +9,4 @@ Thumbs.db
 
 # Project
 /vendor
-#composer.lock
-/tmp
+composer.lock
