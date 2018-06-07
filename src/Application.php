@@ -9,6 +9,9 @@
 namespace Lyrasoft\Cli;
 
 use Windwalker\Console\Console;
+use Windwalker\Console\IO\IOInterface;
+use Windwalker\DI\Container;
+use Windwalker\Structure\Structure;
 
 /**
  * The Application class.
@@ -37,4 +40,37 @@ class Application extends Console
      * @var  string
      */
     protected $description = 'LYRASOFT internal tool to help us setup develop environment.';
+
+    /**
+     * Property container.
+     *
+     * @var  Container
+     */
+    protected $container;
+
+    /**
+     * Application constructor.
+     *
+     * @param IOInterface|null $io
+     * @param Structure|null   $config
+     * @param Container        $container
+     */
+    public function __construct(IOInterface $io = null, Structure $config = null, Container $container)
+    {
+        parent::__construct($io, $config);
+
+        $this->container = $container;
+    }
+
+    /**
+     * Method to get property Container
+     *
+     * @return  Container
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
 }

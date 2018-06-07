@@ -9,6 +9,7 @@
 namespace Lyrasoft\Cli\Command;
 
 use Lyrasoft\Cli\Command\Pstorm\PushConfigCommand;
+use Lyrasoft\Cli\Ioc;
 use Windwalker\Console\Command\Command;
 
 /**
@@ -59,7 +60,7 @@ class PstormCommand extends Command
      */
     protected function init()
     {
-        $this->addCommand(PushConfigCommand::class);
+        $this->addCommand(Ioc::createSharedObject(PushConfigCommand::class, ['name' => null, 'parent' => null]));
 
         // Options
         $this->addGlobalOption('f')

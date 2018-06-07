@@ -8,16 +8,23 @@
  */
 
 use Lyrasoft\Cli\{
-    Application,
-    Command\PstormCommand
+    Application, Command\PstormCommand, Ioc, Service\AppProvider
 };
 
 require __DIR__ . '/vendor/autoload.php';
 
-$app = new Application();
+define('LYRA_ROOT', __DIR__);
+define('LYRA_SOURCE', __DIR__ . '/src');
+define('LYRA_TMP', __DIR__ . '/tmp');
+
+$container = Ioc::getContainer();
+$container->registerServiceProvider(new AppProvider());
+
+/** @var Application $app */
+$app = $container->get(Application::class);
 
 // Register commands
-$app->addCommand(PstormCommand::class);
+$app->addCommand($container->createSharedObject(PstormCommand::class));
 
 try {
     $code = $app->execute();
