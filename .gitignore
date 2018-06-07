@@ -8,5 +8,5 @@ Thumbs.db
 
 # Project
 /vendor
-composer.lock
+#composer.lock
 /tmp

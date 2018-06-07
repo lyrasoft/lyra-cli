@@ -17,9 +17,7 @@
         "windwalker/environment": "^3.3",
         "windwalker/di": "^3.3",
         "windwalker/utilities": "^3.3",
-        "windwalker/filesystem": "^3.3",
-        "knplabs/github-api": "^2.8",
-        "php-http/guzzle6-adapter": "^1.1"
+        "windwalker/filesystem": "^3.3"
     },
     "autoload": {
         "psr-4": {
