@@ -27,8 +27,6 @@ class ProcessHelper
      */
     public static function runAt(string $chdir, callable $handler)
     {
-        show($chdir);exit(' @Checkpoint');
-        
         $current = getcwd();
         chdir($chdir);
 
