@@ -30,25 +30,22 @@ class PhpStormHelper
     public static function getConfigFolder(): string
     {
         /** @var Environment $env */
-        $env          = Ioc::getContainer()->get(Environment::class);
-        $configFolder = '';
+        $env = Ioc::getContainer()->get(Environment::class);
 
-        // Mac
         if ($env->getPlatform()->isUnix()) {
-            $folders = glob($_SERVER['HOME'] . '/Library/Preferences/PhpStorm*');
-
-            $configFolder = array_pop($folders);
-
-            if (!$configFolder) {
-                throw new \RuntimeException('Phpstorm config folder not found in: ' . $_SERVER['HOME'] . '/Library/Preferences');
-            }
+            $folderPattern = $_SERVER['HOME'] . '/Library/Preferences/PhpStorm*';
         } elseif ($env->getPlatform()->isWin()) {
-            // Windows
-            throw new \LogicException('Must implement Windows');
+            $folderPattern = $_SERVER['HOME'] . '/.PhpStorm*';
+        } else {
+            throw new \RuntimeException('Only support Mac and Windows now.');
         }
 
-        if (!$configFolder) {
-            throw new \RuntimeException('Phpstorm config folder not found.');
+        $folders = glob($folderPattern);
+
+        $configFolder = array_pop($folders);
+
+        if ($configFolder === null) {
+            throw new \RuntimeException('Phpstorm config folder not found in: ' . \dirname($folderPattern));
         }
 
         return $configFolder;

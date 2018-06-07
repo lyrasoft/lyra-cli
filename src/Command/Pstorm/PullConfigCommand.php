@@ -11,10 +11,7 @@ namespace Lyrasoft\Cli\Command\Pstorm;
 use Lyrasoft\Cli\Github\DevtoolsHelper;
 use Lyrasoft\Cli\Github\GithubHelper;
 use Lyrasoft\Cli\PhpStorm\PhpStormHelper;
-use Windwalker\Console\Command\AbstractCommand;
 use Windwalker\Console\Command\Command;
-use Windwalker\Console\IO\IOInterface;
-use Windwalker\Environment\Environment;
 use Windwalker\Filesystem\File;
 use Windwalker\Filesystem\Folder;
 
