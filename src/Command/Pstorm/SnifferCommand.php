@@ -11,8 +11,10 @@ namespace Lyrasoft\Cli\Command\Pstorm;
 use Lyrasoft\Cli\Composer\ComposerHelper;
 use Lyrasoft\Cli\Github\DevtoolsHelper;
 use Lyrasoft\Cli\Github\GithubHelper;
+use Lyrasoft\Cli\Ioc;
 use Lyrasoft\Cli\PhpStorm\PhpStormHelper;
 use Windwalker\Console\Command\Command;
+use Windwalker\Environment\Environment;
 use Windwalker\Filesystem\File;
 
 /**
@@ -97,21 +99,26 @@ class SnifferCommand extends Command
     {
         GithubHelper::prepareRepo();
 
+        /** @var Environment $env */
+        $env = Ioc::get(Environment::class);
+
         $vendorPath = ComposerHelper::getVendorPath() . '/vendor';
 
         // Install PHPCS to PhpStorm Settings
-        $phpcsPath = $vendorPath . '/bin/phpcs';
+        $phpcsPath = $vendorPath . '/bin/phpcs' . ($env->platform->isWin() ? '.bat' : '');
 
         $phpConfig = PhpStormHelper::getConfigFolder() . '/options/php.xml';
 
         $xml = new \SimpleXMLElement(file_get_contents($phpConfig));
 
+        $componentName = $env->platform->isWin() ? 'PhpInterpreters' : 'PhpCodeSniffer';
+
         // Let's prepare XML deep nodes
-        $component = $xml->xpath('//component[@name="PhpCodeSniffer"]')[0];
+        $component = $xml->xpath('//component[@name="' . $componentName . '"]')[0];
 
         if (!isset($component)) {
             $component = $xml->addChild('component');
-            $component->addAttribute('name', 'PhpCodeSniffer');
+            $component->addAttribute('name', $componentName);
         }
 
         if (!isset($component->phpcs_settings)) {
