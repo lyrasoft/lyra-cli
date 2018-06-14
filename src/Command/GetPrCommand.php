@@ -62,13 +62,13 @@ class GetPrCommand extends Command
      */
     protected function init()
     {
-        $this->addOption('remote')
-            ->alias('r')
+        $this->addOption('r')
+            ->alias('remove')
             ->defaultValue('lyra')
             ->description('Remote name.');
 
-        $this->addOption('checkout')
-            ->alias('c')
+        $this->addOption('c')
+            ->alias('checkout')
             ->defaultValue(false)
             ->description('Checkout to this branch instantly.');
     }

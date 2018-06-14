@@ -54,8 +54,8 @@ class SnifferCommand extends Command
      */
     protected function init()
     {
-        $this->addOption('path')
-            ->alias('p')
+        $this->addOption('p')
+            ->alias('path')
             ->description('Also update phpcs executable path.');
     }
 
