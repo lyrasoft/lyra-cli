@@ -10,11 +10,8 @@ namespace Lyrasoft\Cli\Command\Pstorm;
 
 use Lyrasoft\Cli\Composer\ComposerHelper;
 use Lyrasoft\Cli\Github\DevtoolsHelper;
-use Lyrasoft\Cli\Github\GithubHelper;
 use Lyrasoft\Cli\PhpStorm\PhpStormHelper;
 use Windwalker\Console\Command\Command;
-use Windwalker\Filesystem\File;
-use Windwalker\Filesystem\Folder;
 
 /**
  * The PushConfigCommand class.

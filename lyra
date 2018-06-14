@@ -8,11 +8,9 @@
  */
 
 use Lyrasoft\Cli\{
-    Application,
-    Ioc,
-    Service\AppProvider
+    Application, Ioc, Service\AppProvider
 };
-use \Lyrasoft\Cli\Command;
+use Lyrasoft\Cli\Command;
 
 $autoload = __DIR__ . '/vendor/autoload.php';
 

@@ -11,7 +11,6 @@ namespace Lyrasoft\Cli\Command;
 use Lyrasoft\Cli\Command\Pstorm\PullConfigCommand;
 use Lyrasoft\Cli\Command\Pstorm\PushConfigCommand;
 use Lyrasoft\Cli\Command\Pstorm\SnifferCommand;
-use Lyrasoft\Cli\Ioc;
 use Windwalker\Console\Command\Command;
 
 /**
