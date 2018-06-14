@@ -114,19 +114,20 @@ class SnifferCommand extends Command
             $component->addAttribute('name', 'PhpCodeSniffer');
         }
 
-        if (!isset($xml->component->phpcs_settings)) {
-            $xml->component->addChild('phpcs_settings');
+        if (!isset($component->phpcs_settings)) {
+            $component->addChild('phpcs_settings');
         }
 
-        if (!isset($xml->component->phpcs_settings->PhpCSConfiguration)) {
-            $xml->component->phpcs_settings->addChild('PhpCSConfiguration');
+        if (!isset($component->phpcs_settings->PhpCSConfiguration)) {
+            $component->phpcs_settings->addChild('PhpCSConfiguration');
         }
 
         // All nodes prepared, put value.
-        $xml->component->phpcs_settings->PhpCSConfiguration['tool_path'] = $phpcsPath;
+        $component->phpcs_settings->PhpCSConfiguration['tool_path'] = $phpcsPath;
 
         // Then save
-        $dom               = dom_import_simplexml($xml)->ownerDocument;
+        $dom = dom_import_simplexml($xml)->ownerDocument;
+
         $dom->formatOutput = true;
 
         file_put_contents($phpConfig, $dom->saveXML());
