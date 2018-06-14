@@ -111,14 +111,12 @@ class SnifferCommand extends Command
 
         $xml = new \SimpleXMLElement(file_get_contents($phpConfig));
 
-        $componentName = $env->platform->isWin() ? 'PhpInterpreters' : 'PhpCodeSniffer';
-
         // Let's prepare XML deep nodes
-        $component = $xml->xpath('//component[@name="' . $componentName . '"]')[0];
+        $component = $xml->xpath('//component[@name="PhpCodeSniffer"]')[0];
 
         if (!isset($component)) {
             $component = $xml->addChild('component');
-            $component->addAttribute('name', $componentName);
+            $component->addAttribute('name', 'PhpCodeSniffer');
         }
 
         if (!isset($component->phpcs_settings)) {
