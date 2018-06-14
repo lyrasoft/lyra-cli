@@ -8,8 +8,11 @@
  */
 
 use Lyrasoft\Cli\{
-    Application, Command\PstormCommand, Ioc, Service\AppProvider
+    Application,
+    Ioc,
+    Service\AppProvider
 };
+use \Lyrasoft\Cli\Command;
 
 $autoload = __DIR__ . '/vendor/autoload.php';
 
@@ -30,7 +33,8 @@ $container->registerServiceProvider(new AppProvider());
 $app = $container->get(Application::class);
 
 // Register commands
-$app->addCommand($container->createSharedObject(PstormCommand::class));
+$app->addCommand(Command\PstormCommand::class);
+$app->addCommand(Command\GetPrCommand::class);
 
 try {
     $code = $app->execute();
