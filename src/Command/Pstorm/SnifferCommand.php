@@ -13,6 +13,7 @@ use Lyrasoft\Cli\Github\DevtoolsHelper;
 use Lyrasoft\Cli\Github\GithubHelper;
 use Lyrasoft\Cli\PhpStorm\PhpStormHelper;
 use Windwalker\Console\Command\Command;
+use Windwalker\Filesystem\File;
 
 /**
  * The PushConfigCommand class.
@@ -141,6 +142,17 @@ class SnifferCommand extends Command
         }
 
         $configFile = $idea . '/inspectionProfiles/Project_Default.xml';
+
+        if (!is_file($configFile)) {
+            File::write($configFile, <<<XML
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+  </profile>
+</component>
+XML
+);
+        }
 
         $xml = new \SimpleXMLElement(file_get_contents($configFile));
 
