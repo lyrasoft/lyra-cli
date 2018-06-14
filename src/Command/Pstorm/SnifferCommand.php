@@ -91,7 +91,7 @@ class SnifferCommand extends Command
         $vendorPath = ComposerHelper::getVendorPath() . '/vendor';
 
         // Install PHPCS to PhpStorm Settings
-        $phpcsPath = $vendorPath . '/squizlabs/php_codesniffer/scripts/phpcs';
+        $phpcsPath = $vendorPath . '/bin/phpcs';
 
         $phpConfig = PhpStormHelper::getConfigFolder() . '/options/php.xml';
 
