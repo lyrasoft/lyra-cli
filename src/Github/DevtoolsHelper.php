@@ -41,4 +41,16 @@ class DevtoolsHelper
     {
         return explode('/', static::REPO)[1];
     }
+
+    /**
+     * getLocalPath
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function getLocalPath(): string
+    {
+        return LYRA_TMP . '/' . static::TMP_FOLDER;
+    }
 }

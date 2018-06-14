@@ -124,7 +124,7 @@ class PushConfigCommand extends Command
             foreach ($files as $file) {
                 $srcFile = $configFolder . '/' . $configName . '/' . $file;
 
-                $destFile = LYRA_TMP . '/' . DevtoolsHelper::TMP_FOLDER . '/Editor/PHPStorm/' . $configName . '/' . $file;
+                $destFile = DevtoolsHelper::getLocalPath() . '/Editor/PHPStorm/' . $configName . '/' . $file;
 
                 $this->out(sprintf('[Updated] <info>%s</info>', $srcFile));
 

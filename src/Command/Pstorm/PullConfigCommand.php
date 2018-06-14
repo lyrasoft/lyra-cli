@@ -113,7 +113,7 @@ class PullConfigCommand extends Command
         $this->out(); // New line
 
         $configFolder = $global ? PhpStormHelper::getConfigFolder() : getcwd() . '/.idea';
-        
+
         GithubHelper::prepareRepo();
 
         foreach ($configs as $configName => $enabled) {
@@ -123,10 +123,10 @@ class PullConfigCommand extends Command
 
             $this->out()->out(sprintf('## Start Copy: <comment>%s</comment>', $configName))->out();
 
-            $files = Folder::files(LYRA_TMP . '/' . DevtoolsHelper::TMP_FOLDER . '/Editor/PHPStorm/' . $configName, true, Folder::PATH_RELATIVE);
+            $files = Folder::files(DevtoolsHelper::getLocalPath() . '/Editor/PHPStorm/' . $configName, true, Folder::PATH_RELATIVE);
 
             foreach ($files as $file) {
-                $srcFile = LYRA_TMP . '/' . DevtoolsHelper::TMP_FOLDER . '/Editor/PHPStorm/' . $configName . '/' . $file;
+                $srcFile = DevtoolsHelper::getLocalPath() . '/Editor/PHPStorm/' . $configName . '/' . $file;
 
                 $destFile = $configFolder . '/' . $configName . '/' . $file;
 

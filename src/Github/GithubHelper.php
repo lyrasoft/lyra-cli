@@ -28,7 +28,7 @@ class GithubHelper
      */
     public static function prepareRepo($sync = true): bool
     {
-        $repoLocalPath = LYRA_TMP . '/' . DevtoolsHelper::TMP_FOLDER;
+        $repoLocalPath = DevtoolsHelper::getLocalPath();
 
         if (!is_dir($repoLocalPath . '/.git')) {
             ProcessHelper::runAt(LYRA_TMP, function () {
@@ -57,7 +57,7 @@ class GithubHelper
     {
         $date = new \DateTime();
 
-        return ProcessHelper::runAt(LYRA_TMP . '/' . DevtoolsHelper::TMP_FOLDER, function () use ($date) {
+        return ProcessHelper::runAt(DevtoolsHelper::getLocalPath(), function () use ($date) {
             system('git add --all');
             system('git commit -am "Update by lyra-cli on: ' . $date->format('Y-m-d H:i:s') . '"');
             system('git push');
