@@ -30,12 +30,12 @@ class PhpStormHelper
     public static function getConfigFolder(): string
     {
         /** @var Environment $env */
-        $env = Ioc::getContainer()->get(Environment::class);
+        $env = Ioc::get(Environment::class);
 
         if ($env->getPlatform()->isUnix()) {
             $folderPattern = $_SERVER['HOME'] . '/Library/Preferences/PhpStorm*';
         } elseif ($env->getPlatform()->isWin()) {
-            $folderPattern = $_SERVER['HOME'] . '/.PhpStorm*';
+            $folderPattern = $_SERVER['HOME'] . '/.PhpStorm*/config';
         } else {
             throw new \RuntimeException('Only support Mac and Windows now.');
         }
