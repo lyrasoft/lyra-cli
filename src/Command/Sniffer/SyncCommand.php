@@ -6,7 +6,7 @@
  * @license    __LICENSE__
  */
 
-namespace Lyrasoft\Cli\Command\Pstorm;
+namespace Lyrasoft\Cli\Command\Sniffer;
 
 use Lyrasoft\Cli\Github\GithubHelper;
 use Windwalker\Console\Command\Command;
