@@ -10,6 +10,7 @@ namespace Lyrasoft\Cli\Command\Pstorm;
 
 use Lyrasoft\Cli\Composer\ComposerHelper;
 use Lyrasoft\Cli\Github\DevtoolsHelper;
+use Lyrasoft\Cli\Github\GithubHelper;
 use Lyrasoft\Cli\PhpStorm\PhpStormHelper;
 use Windwalker\Console\Command\Command;
 
@@ -69,46 +70,70 @@ class SnifferCommand extends Command
     protected function doExecute()
     {
         if ($this->getOption('p')) {
-            $vendorPath = ComposerHelper::getVendorPath() . '/vendor';
-
-            // Install PHPCS to PhpStorm Settings
-            $phpcsPath = $vendorPath . '/squizlabs/php_codesniffer/scripts/phpcs';
-
-            $phpConfig = PhpStormHelper::getConfigFolder() . '/options/php.xml';
-
-            $xml = new \SimpleXMLElement(file_get_contents($phpConfig));
-
-            // Let's prepare XML deep nodes
-            $component = $xml->xpath('//component[@name="PhpCodeSniffer"]')[0];
-
-            if (!isset($component)) {
-                $component = $xml->addChild('component');
-                $component->addAttribute('name', 'PhpCodeSniffer');
-            }
-
-            if (!isset($xml->component->phpcs_settings)) {
-                $xml->component->addChild('phpcs_settings');
-            }
-
-            if (!isset($xml->component->phpcs_settings->PhpCSConfiguration)) {
-                $xml->component->phpcs_settings->addChild('PhpCSConfiguration');
-            }
-
-            // All nodes prepared, put value.
-            $xml->component->phpcs_settings->PhpCSConfiguration['tool_path'] = $phpcsPath;
-
-            // Then save
-            $dom = dom_import_simplexml($xml)->ownerDocument;
-            $dom->formatOutput = true;
-
-            file_put_contents($phpConfig, $dom->saveXML());
-
-            $this->out(sprintf('Update PhpStorm Sniffer Path to: <info>%s</info>', $phpcsPath));
+            $this->updateBinFile();
         }
 
-        //        GithubHelper::prepareRepo();
-
         // Now Update .idea sniffer settings
+        $this->updateSnifferSetting();
+
+        return true;
+    }
+
+    /**
+     * updateBinFile
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function updateBinFile()
+    {
+        GithubHelper::prepareRepo();
+
+        $vendorPath = ComposerHelper::getVendorPath() . '/vendor';
+
+        // Install PHPCS to PhpStorm Settings
+        $phpcsPath = $vendorPath . '/squizlabs/php_codesniffer/scripts/phpcs';
+
+        $phpConfig = PhpStormHelper::getConfigFolder() . '/options/php.xml';
+
+        $xml = new \SimpleXMLElement(file_get_contents($phpConfig));
+
+        // Let's prepare XML deep nodes
+        $component = $xml->xpath('//component[@name="PhpCodeSniffer"]')[0];
+
+        if (!isset($component)) {
+            $component = $xml->addChild('component');
+            $component->addAttribute('name', 'PhpCodeSniffer');
+        }
+
+        if (!isset($xml->component->phpcs_settings)) {
+            $xml->component->addChild('phpcs_settings');
+        }
+
+        if (!isset($xml->component->phpcs_settings->PhpCSConfiguration)) {
+            $xml->component->phpcs_settings->addChild('PhpCSConfiguration');
+        }
+
+        // All nodes prepared, put value.
+        $xml->component->phpcs_settings->PhpCSConfiguration['tool_path'] = $phpcsPath;
+
+        // Then save
+        $dom               = dom_import_simplexml($xml)->ownerDocument;
+        $dom->formatOutput = true;
+
+        file_put_contents($phpConfig, $dom->saveXML());
+
+        $this->out(sprintf('Update PhpStorm Sniffer Path to: <info>%s</info>', $phpcsPath));
+    }
+
+    /**
+     * updateSnifferSetting
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function updateSnifferSetting()
+    {
         $idea = getcwd() . '/.idea';
 
         if (!is_dir($idea)) {
@@ -127,8 +152,8 @@ class SnifferCommand extends Command
             $tool->addAttribute('class', 'PhpCSValidationInspection');
         }
 
-        $tool['enabled'] = 'true';
-        $tool['level'] = 'WEAK WARNING';
+        $tool['enabled']            = 'true';
+        $tool['level']              = 'WEAK WARNING';
         $tool['enabled_by_default'] = 'true';
 
         $option = $tool->xpath('//option[@name="CODING_STANDARD"]')[0];
@@ -150,14 +175,16 @@ class SnifferCommand extends Command
         $option['value'] = DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker';
 
         // Then save
-        $dom = dom_import_simplexml($xml)->ownerDocument;
+        $dom               = dom_import_simplexml($xml)->ownerDocument;
         $dom->formatOutput = true;
 
         file_put_contents($configFile, $dom->saveXML());
 
-        $this->out(sprintf('Use <info>%s</info> as phpcs ruleset path.', DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker'));
-        $this->out('Enable PHP Sniffer for current project.');
+        $this->out(sprintf(
+            'Use <info>%s</info> as phpcs ruleset path.',
+            DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker')
+        );
 
-        return true;
+        $this->out('Enable PHP Sniffer for current project.');
     }
 }
