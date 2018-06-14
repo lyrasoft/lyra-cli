@@ -13,6 +13,7 @@ use Windwalker\DI\Container;
 /**
  * The Ioc class.
  *
+ * @method static get($key, $forceNew = false)
  * @method static createObject(string $class, array $args = [], $shared = false, $protected = false)
  * @method static createSharedObject(string $class, array $args = [], $protected = false)
  * @method static newInstance($class, array $args = [])

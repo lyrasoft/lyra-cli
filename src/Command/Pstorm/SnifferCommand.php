@@ -71,10 +71,18 @@ class SnifferCommand extends Command
     protected function doExecute()
     {
         if ($this->getOption('p')) {
+            $this->out()
+                ->out('Updating phpcs executable file')
+                ->out('---------------------------------------------');
+
             $this->updateBinFile();
         }
 
         // Now Update .idea sniffer settings
+        $this->out()
+            ->out('Updating current project settings')
+            ->out('---------------------------------------------');
+
         $this->updateSnifferSetting();
 
         return true;
