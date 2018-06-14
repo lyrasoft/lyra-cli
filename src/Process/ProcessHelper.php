@@ -6,7 +6,7 @@
  * @license    __LICENSE__
  */
 
-namespace Lyrasoft\Cli\System;
+namespace Lyrasoft\Cli\Process;
 
 /**
  * The ProcessHelper class.

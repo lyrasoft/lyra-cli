@@ -8,7 +8,7 @@
 
 namespace Lyrasoft\Cli\Github;
 
-use Lyrasoft\Cli\System\ProcessHelper;
+use Lyrasoft\Cli\Process\ProcessHelper;
 
 /**
  * The GithubHelper class.

@@ -6,43 +6,35 @@
  * @license    __LICENSE__
  */
 
-namespace Lyrasoft\Cli\Command;
+namespace Lyrasoft\Cli\Command\Pstorm;
 
-use Lyrasoft\Cli\Command\Pstorm\PullConfigCommand;
-use Lyrasoft\Cli\Command\Pstorm\PushConfigCommand;
-use Lyrasoft\Cli\Command\Pstorm\SnifferCommand;
-use Lyrasoft\Cli\Ioc;
+use Lyrasoft\Cli\Github\DevtoolsHelper;
+use Lyrasoft\Cli\Github\GithubHelper;
+use Lyrasoft\Cli\PhpStorm\PhpStormHelper;
 use Windwalker\Console\Command\Command;
+use Windwalker\Filesystem\File;
+use Windwalker\Filesystem\Folder;
 
 /**
- * The PstormCommand class.
+ * The PushConfigCommand class.
  *
  * @since  __DEPLOY_VERSION__
  */
-class PstormCommand extends Command
+class SnifferCommand extends Command
 {
     /**
      * Property name.
      *
      * @var  string
      */
-    protected $name = 'pstorm';
+    protected $name = 'sniffer';
 
     /**
      * Property description.
      *
      * @var  string
      */
-    protected $description = 'PhpStorm Helpers';
-
-    /**
-     * The usage to tell user how to use this command.
-     *
-     * @var string
-     *
-     * @since  2.0
-     */
-    protected $usage = '%s <cmd><command></cmd> <option>[option]</option>';
+    protected $description = 'Install and enable PHP Sniffer for this project.';
 
     /**
      * The manual about this command.
@@ -62,9 +54,7 @@ class PstormCommand extends Command
      */
     protected function init()
     {
-        $this->addCommand(PushConfigCommand::class);
-        $this->addCommand(PullConfigCommand::class);
-        $this->addCommand(SnifferCommand::class);
+
     }
 
     /**
@@ -73,9 +63,13 @@ class PstormCommand extends Command
      * @return int
      *
      * @since  2.0
+     * @throws \LogicException
+     * @throws \RuntimeException
      */
     protected function doExecute()
     {
-        return parent::doExecute();
+
+
+        return true;
     }
 }

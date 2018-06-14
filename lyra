@@ -35,6 +35,7 @@ $app = $container->get(Application::class);
 // Register commands
 $app->addCommand(Command\PstormCommand::class);
 $app->addCommand(Command\GetPrCommand::class);
+$app->addCommand(Command\SnifferCommand::class);
 
 try {
     $code = $app->execute();

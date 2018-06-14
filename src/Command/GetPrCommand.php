@@ -11,6 +11,7 @@ namespace Lyrasoft\Cli\Command;
 use Lyrasoft\Cli\Command\Pstorm\PullConfigCommand;
 use Lyrasoft\Cli\Command\Pstorm\PushConfigCommand;
 use Lyrasoft\Cli\Ioc;
+use Lyrasoft\Cli\Process\RunProcessTrait;
 use Symfony\Component\Process\Process;
 use Windwalker\Console\Command\Command;
 use Windwalker\Console\Exception\WrongArgumentException;
@@ -22,6 +23,8 @@ use Windwalker\Console\Exception\WrongArgumentException;
  */
 class GetPrCommand extends Command
 {
+    use RunProcessTrait;
+
     /**
      * Property name.
      *
@@ -96,30 +99,18 @@ class GetPrCommand extends Command
 
         $branch = $this->getArgument(1, 'pr-' . $pr);
 
-        (new Process(sprintf(
+        $this->runProcess(sprintf(
             'git fetch %s refs/pull/%s/head:%s',
             $remote,
             $pr,
             $branch
-        )))->run(function ($type, $buffer) {
-            if (Process::ERR === $type) {
-                $this->err($buffer, false);
-            } else {
-                $this->out($buffer, false);
-            }
-        });
+        ));
 
         if ($this->getOption('c')) {
-            (new Process(sprintf(
+            $this->runProcess(sprintf(
                 'git checkout %s',
                 $branch
-            )))->run(function ($type, $buffer) {
-                if (Process::ERR === $type) {
-                    $this->err($buffer, false);
-                } else {
-                    $this->out($buffer, false);
-                }
-            });
+            ));
         }
 
         return true;

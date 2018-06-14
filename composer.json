@@ -17,7 +17,8 @@
         "windwalker/di": "^3.3",
         "windwalker/utilities": "^3.3",
         "windwalker/filesystem": "^3.3",
-        "symfony/process": "^3.0"
+        "symfony/process": "^3.0",
+        "squizlabs/php_codesniffer": "^3.3"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master"
