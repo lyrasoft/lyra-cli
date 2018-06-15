@@ -93,9 +93,9 @@ class PullConfigCommand extends Command
     protected function doExecute()
     {
         $configs = [
-            'fileTemplates' => $this->getOption('a') ? true : $this->getOption('f'),
-            'codestyles'    => $this->getOption('a') ? true : $this->getOption('c'),
-            'templates'     => $this->getOption('a') ? true : $this->getOption('l')
+            'fileTemplates' => $this->getOption('a') ? true : (bool) $this->getOption('f'),
+            'codestyles'    => $this->getOption('a') ? true : (bool) $this->getOption('c'),
+            'templates'     => $this->getOption('a') ? true : (bool) $this->getOption('l')
         ];
 
         if (!\in_array(true, $configs, true)) {
