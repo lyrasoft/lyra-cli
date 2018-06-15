@@ -84,7 +84,7 @@ lyra pr {number} -c
 lyra pr {number} -r=upstream
 ```
 
-## PHP Code Sniffer
+### PHP Code Sniffer
 
 先切換到專案目錄(確定已經先用 phpstorm 開啟過這個目錄，有 .idea 資料夾)，第一次先執行：
 
