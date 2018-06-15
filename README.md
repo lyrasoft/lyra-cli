@@ -124,6 +124,6 @@ lyra-cli 的目錄在 `vendor/lyrasoft/cli` 內，將 `cli` 目錄移除，直�
 
 最上層 Command 請寫好 class 之後，註冊在 `/lyra` 檔案內。
 
-See: https://github.com/lyrasoft/lyra-cli/blob/65025fb2f8946d24bc317df2001b792fa3040bdd/lyra#L33
+See: https://github.com/lyrasoft/lyra-cli/blob/6c76cacd4a62393337e6c37f49f80dd263bd920d/lyra#L34
 
 之後的寫法請參考: [Windwalker Console](https://github.com/ventoviro/windwalker-console#windwalker-console)
