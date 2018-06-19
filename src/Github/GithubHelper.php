@@ -32,7 +32,7 @@ class GithubHelper
 
         if (!is_dir($repoLocalPath . '/.git')) {
             ProcessHelper::runAt(LYRA_TMP, function () {
-                system('git clone git@github.com:' . DevtoolsHelper::REPO . '.git ' . DevtoolsHelper::TMP_FOLDER);
+                system('git clone https://github.com/' . DevtoolsHelper::REPO . '.git ' . DevtoolsHelper::TMP_FOLDER);
             });
         }
 
