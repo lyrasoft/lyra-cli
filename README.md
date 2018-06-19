@@ -112,13 +112,15 @@ lyra sniffer sync
 
 ## 開發方式
 
-若要增加或修改功能，最快的方法是先安裝完 lyra-cli，接著 cd 到 Composer 的 global 目錄:
+若要增加或修改功能，可以用 `composer global require lyrasoft/cli --prefer-source` ，這樣就會下載 github 上的版本，就可以直接
+編輯，然後用 git commit 修改內容。 記得可以先 fork 一份，然後加上你自己的 remote。
+
+編輯位置在 Composer 的 global 目錄:
 
 - Windows: `C:\Users\<user_name>\AppData\Roaming\Composer`
 - Mac: `~/.composer`
 
-lyra-cli 的目錄在 `vendor/lyrasoft/cli` 內，將 `cli` 目錄移除，直接 git clone lyra-cli 的專案過來取代，就能一邊開發一邊測試了，
-開發完可以直接 git push。 (別忘了先 fork)
+lyra-cli 的目錄在 `{COMPOSER_HOME}/vendor/lyrasoft/cli` 內。
 
 ### Command 的編寫方式
 
