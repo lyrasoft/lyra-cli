@@ -31,9 +31,9 @@ $container->registerServiceProvider(new AppProvider());
 $app = $container->get(Application::class);
 
 // Register commands
-$app->addCommand(Command\PstormCommand::class);
-$app->addCommand(Command\GetPrCommand::class);
-$app->addCommand(Command\SnifferCommand::class);
+$app->addCommand(Ioc::make(Command\PstormCommand::class));
+$app->addCommand(Ioc::make(Command\GetPrCommand::class));
+$app->addCommand(Ioc::make(Command\SnifferCommand::class));
 
 try {
     $code = $app->execute();

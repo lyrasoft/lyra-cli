@@ -11,6 +11,7 @@ namespace Lyrasoft\Cli\Command;
 use Lyrasoft\Cli\Command\Pstorm\PullConfigCommand;
 use Lyrasoft\Cli\Command\Pstorm\PushConfigCommand;
 use Lyrasoft\Cli\Command\Pstorm\SnifferCommand;
+use Lyrasoft\Cli\Ioc;
 use Windwalker\Console\Command\Command;
 
 /**
@@ -61,9 +62,9 @@ class PstormCommand extends Command
      */
     protected function init()
     {
-        $this->addCommand(PushConfigCommand::class);
-        $this->addCommand(PullConfigCommand::class);
-        $this->addCommand(SnifferCommand::class);
+        $this->addCommand(Ioc::make(PushConfigCommand::class));
+        $this->addCommand(Ioc::make(PullConfigCommand::class));
+        $this->addCommand(Ioc::make(SnifferCommand::class));
     }
 
     /**

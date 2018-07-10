@@ -9,6 +9,7 @@
 namespace Lyrasoft\Cli\Command;
 
 use Lyrasoft\Cli\Command\Sniffer\SyncCommand;
+use Lyrasoft\Cli\Ioc;
 use Lyrasoft\Cli\Process\RunProcessTrait;
 use Windwalker\Console\Command\Command;
 
@@ -62,7 +63,7 @@ class SnifferCommand extends Command
      */
     protected function init()
     {
-        $this->addCommand(SyncCommand::class);
+        $this->addCommand(Ioc::make(SyncCommand::class));
     }
 
     /**
