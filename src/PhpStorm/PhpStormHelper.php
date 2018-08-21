@@ -35,7 +35,9 @@ class PhpStormHelper
         if ($env->getPlatform()->isUnix()) {
             $folderPattern = $_SERVER['HOME'] . '/Library/Preferences/PhpStorm*';
         } elseif ($env->getPlatform()->isWin()) {
-            $folderPattern = $_SERVER['HOME'] . '/.PhpStorm*/config';
+            $home = $_SERVER['HOME'] ?? $_SERVER['USERPROFILE'];
+
+            $folderPattern = $home . '/.PhpStorm*/config';
         } else {
             throw new \RuntimeException('Only support Mac and Windows now.');
         }
