@@ -94,6 +94,20 @@ class GetPrCommand extends Command
         }
 
         $branch = $this->getArgument(1, 'pr-' . $pr);
+        $checkout = $this->getOption('c');
+
+        $this->out(sprintf(
+            'Fetch PR: <info>%s</info> from remote: <option>%s</option> as branch: <info>%s</info>',
+            $pr,
+            $remote,
+            $branch
+        ));
+
+        if (!$checkout) {
+            $this->out()->out('NOTE: You can use <info>-c</info> to auto checkout');
+        }
+
+        $this->out();
 
         $this->runProcess(sprintf(
             'git fetch %s refs/pull/%s/head:%s',
@@ -102,7 +116,7 @@ class GetPrCommand extends Command
             $branch
         ));
 
-        if ($this->getOption('c')) {
+        if ($checkout) {
             $this->runProcess(sprintf(
                 'git checkout %s',
                 $branch
