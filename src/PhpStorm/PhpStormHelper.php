@@ -8,6 +8,7 @@
 
 namespace Lyrasoft\Cli\PhpStorm;
 
+use Lyrasoft\Cli\Environment\EnvironmentHelper;
 use Lyrasoft\Cli\Ioc;
 use Windwalker\Environment\Environment;
 
@@ -32,11 +33,11 @@ class PhpStormHelper
         /** @var Environment $env */
         $env = Ioc::get(Environment::class);
 
-        if ($env->getPlatform()->isUnix()) {
-            $folderPattern = $_SERVER['HOME'] . '/Library/Preferences/PhpStorm*';
-        } elseif ($env->getPlatform()->isWin()) {
-            $home = $_SERVER['HOME'] ?? $_SERVER['USERPROFILE'];
+        $home = EnvironmentHelper::getUserDir();
 
+        if ($env->getPlatform()->isUnix()) {
+            $folderPattern = $home . '/Library/Preferences/PhpStorm*';
+        } elseif ($env->getPlatform()->isWin()) {
             $folderPattern = $home . '/.PhpStorm*/config';
         } else {
             throw new \RuntimeException('Only support Mac and Windows now.');

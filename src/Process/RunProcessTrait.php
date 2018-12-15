@@ -28,8 +28,14 @@ trait RunProcessTrait
      * @return int
      * @throws \RuntimeException When proc_open is not installed
      */
-    public function runProcess($commandline, $cwd = null, array $env = null, $input = null, $timeout = 60, array $options = null)
-    {
+    public function runProcess(
+        string $commandline,
+        string $cwd = null,
+        array $env = null,
+        $input = null,
+        $timeout = 60,
+        array $options = null
+    ) {
         return (new Process($commandline, $cwd, $env, $input, $timeout, $options))
             ->run(function ($type, $buffer) {
                 if (Process::ERR === $type) {
