@@ -182,26 +182,19 @@ XML
         $tool['level']              = 'WEAK WARNING';
         $tool['enabled_by_default'] = 'true';
 
-        $option = $tool->xpath('//option[@name="CODING_STANDARD"]')[0];
-
-        if (!isset($option)) {
-            $option = $tool->addChild('option');
-            $option->addAttribute('name', 'CODING_STANDARD');
-        }
-
-        $option['value'] = 'Custom';
-
-        $option = $tool->xpath('//option[@name="CUSTOM_RULESET_PATH"]')[0];
-
-        if (!isset($option)) {
-            $option = $tool->addChild('option');
-            $option->addAttribute('name', 'CUSTOM_RULESET_PATH');
-        }
-
-        $option['value'] = DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker';
+        static::addOrCreateOptionWithValue($tool, 'CODING_STANDARD', 'Custom');
+        static::addOrCreateOptionWithValue(
+            $tool,
+            'CUSTOM_RULESET_PATH',
+            DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker'
+        );
+        static::addOrCreateOptionWithValue($tool, 'CHECK_INC', 'false');
+        static::addOrCreateOptionWithValue($tool, 'CHECK_JS', 'false');
+        static::addOrCreateOptionWithValue($tool, 'CHECK_CSS', 'false');
 
         // Then save
-        $dom               = dom_import_simplexml($xml)->ownerDocument;
+        $dom = dom_import_simplexml($xml)->ownerDocument;
+
         $dom->formatOutput = true;
 
         file_put_contents($configFile, $dom->saveXML());
@@ -212,5 +205,30 @@ XML
         );
 
         $this->out('Enable PHP Sniffer for current project.');
+    }
+
+    /**
+     * addOrCreateOptionWithValue
+     *
+     * @param \SimpleXMLElement $tool
+     * @param string            $name
+     * @param string            $value
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function addOrCreateOptionWithValue(\SimpleXMLElement $tool, string $name, string $value = null)
+    {
+        $option = $tool->xpath('//option[@name="' . $name . '"]')[0];
+
+        if (!isset($option)) {
+            $option = $tool->addChild('option');
+            $option->addAttribute('name', $name);
+        }
+
+        if ($value !== null) {
+            $option['value'] = $value;
+        }
     }
 }
