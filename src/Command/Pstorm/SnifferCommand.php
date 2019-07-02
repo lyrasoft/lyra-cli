@@ -66,9 +66,9 @@ class SnifferCommand extends Command
      *
      * @return int
      *
-     * @since  2.0
      * @throws \LogicException
      * @throws \RuntimeException
+     * @since  2.0
      */
     protected function doExecute()
     {
@@ -171,7 +171,7 @@ class SnifferCommand extends Command
   </profile>
 </component>
 XML
-);
+            );
         }
 
         $xml = new \SimpleXMLElement(file_get_contents($configFile));
@@ -207,8 +207,8 @@ XML
 
         $this->out(sprintf(
             'Use <info>%s</info> as phpcs ruleset path.',
-            DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker')
-        );
+            DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker'
+        ));
 
         $this->out('Enable PHP Sniffer for current project.');
     }

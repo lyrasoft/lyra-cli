@@ -109,24 +109,27 @@ class AddSshCommand extends Command
             'No username.'
         );
 
-        $passwordPrompter = (new PasswordPrompter('Password: ', function ($pass) use($username, $title) {
-            $this->githubService->login($username, $pass);
+        $passwordPrompter = (new PasswordPrompter(
+            'Password: ',
+            function ($pass) use ($username, $title) {
+                $this->githubService->login($username, $pass);
 
-            try {
-                $this->githubService->registerSshKey(
-                    $title,
-                    $this->sshService->getPubKey()
-                );
-            } catch (RuntimeException $e) {
-                if ($e->getCode() === 401) {
-                    return false;
+                try {
+                    $this->githubService->registerSshKey(
+                        $title,
+                        $this->sshService->getPubKey()
+                    );
+                } catch (RuntimeException $e) {
+                    if ($e->getCode() === 401) {
+                        return false;
+                    }
+
+                    throw $e;
                 }
 
-                throw $e;
+                return true;
             }
-
-            return true;
-        }))->setAttemptTimes(3)
+        ))->setAttemptTimes(3)
             ->failToClose(true)
             ->setNoValidMessage('Password invalid');
 
