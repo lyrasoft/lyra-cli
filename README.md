@@ -106,6 +106,44 @@ lyra sniffer sync
 
 就會自動刷新 Sniffer 規則
 
+## 註冊 GitHub SSH Key
+
+lyra-cli 提供了方便的指令直接幫你註冊 GitHub SSH Key.
+
+執行
+
+```
+lyra github add-ssh
+```
+
+第一次會需要產生 SSH Key，輸入 SSH 的對應信箱，下面出現一系列問題都直接按 Enter 通過
+
+```
+Tell me your E-mail: xxx@gmail.com
+
+Enter passphrase (empty for no passphrase): Generating public/private rsa key pair.
+Enter file in which to save the key (C:\Users\Xxx/.ssh/id_rsa):
+Enter same passphrase again:
+Your identification has been saved in C:\Users\Xxx/.ssh/id_rsa.
+Your public key has been saved in C:\Users\Xxx/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:cT7l5fe4kzlKsxQle1jC6/0p4je********** xxx@gmail.com
+The key's randomart image is:
++---[RSA 4096]----+
+|                 |
+|           .     |
+|        . . = +  |
+|         + o @ o |
+|        S o * B .|
+|           o *.=.|
+|          o E.=+.|
+|         . @.O==+|
+|         .+oB.*=+|
++----[SHA256]-----+
+```
+
+SSH Key 產生之後，會問你 GitHub 的登入帳密，輸入後便可自動註冊完成。
+
 ## 完整指令說明
 
 請直接用 `-h` 觀看說明
