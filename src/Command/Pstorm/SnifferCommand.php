@@ -97,6 +97,12 @@ class SnifferCommand extends Command
      */
     protected function updateBinFile()
     {
+        $idea = getcwd() . '/.idea';
+
+        if (!is_dir($idea)) {
+            throw new \RuntimeException('This path is not a PhpStorm project.');
+        }
+
         GithubHelper::prepareRepo();
 
         /** @var Environment $env */
@@ -107,9 +113,9 @@ class SnifferCommand extends Command
         // Install PHPCS to PhpStorm Settings
         $phpcsPath = $vendorPath . '/bin/phpcs' . ($env->platform->isWin() ? '.bat' : '');
 
-        $phpConfig = PhpStormHelper::getConfigFolder() . '/options/php.xml';
+        $configFile = $idea . '/php.xml';
 
-        $xml = new \SimpleXMLElement(file_get_contents($phpConfig));
+        $xml = new \SimpleXMLElement(file_get_contents($configFile));
 
         // Let's prepare XML deep nodes
         $component = $xml->xpath('//component[@name="PhpCodeSniffer"]')[0];
@@ -135,7 +141,7 @@ class SnifferCommand extends Command
 
         $dom->formatOutput = true;
 
-        file_put_contents($phpConfig, $dom->saveXML());
+        file_put_contents($configFile, $dom->saveXML());
 
         $this->out(sprintf('Update PhpStorm Sniffer Path to: <info>%s</info>', $phpcsPath));
     }
@@ -171,7 +177,7 @@ XML
         $xml = new \SimpleXMLElement(file_get_contents($configFile));
 
         // Let's prepare XML deep nodes
-        $tool = $xml->xpath('//profile/inspection_tool[@class="PhpCSValidationInspection"]')[0];
+        $tool = $xml->xpath('//profile/inspection_tool[@class="PhpCSValidationInspection"]')[0] ?? null;
 
         if (!isset($tool)) {
             $tool = $xml->profile->addChild('inspection_tool');
@@ -220,7 +226,7 @@ XML
      */
     public static function addOrCreateOptionWithValue(\SimpleXMLElement $tool, string $name, string $value = null)
     {
-        $option = $tool->xpath('//option[@name="' . $name . '"]')[0];
+        $option = $tool->xpath('//option[@name="' . $name . '"]')[0] ?? null;
 
         if (!isset($option)) {
             $option = $tool->addChild('option');
