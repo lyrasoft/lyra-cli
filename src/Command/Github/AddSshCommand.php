@@ -101,7 +101,14 @@ class AddSshCommand extends Command
 
         $this->out()->out('Starting to add SSH key to GitHub...');
 
-        $username = Prompter::notNullText('Username: ', '', 'Please enter username.');
+        $username = Prompter::notNullText(
+            'Username: ',
+            '',
+            'Please enter username.',
+            3,
+            'No username.'
+        );
+
         $passwordPrompter = (new PasswordPrompter('Password: ', function ($pass) use($username, $title) {
             $this->githubService->login($username, $pass);
 
@@ -120,6 +127,7 @@ class AddSshCommand extends Command
 
             return true;
         }))->setAttemptTimes(3)
+            ->failToClose(true)
             ->setNoValidMessage('Password invalid');
 
         $passwordPrompter->ask();
