@@ -8,7 +8,7 @@
 
 namespace Lyrasoft\Cli\Command;
 
-use Lyrasoft\Cli\Command\Github\AddSshCommand;
+use Lyrasoft\Cli\Command\Util\SshKeyCommand;
 use Lyrasoft\Cli\Ioc;
 use Lyrasoft\Cli\Process\RunProcessTrait;
 use Windwalker\Console\Command\Command;
@@ -18,7 +18,7 @@ use Windwalker\Console\Command\Command;
  *
  * @since  __DEPLOY_VERSION__
  */
-class GithubCommand extends Command
+class UtilCommand extends Command
 {
     use RunProcessTrait;
 
@@ -27,14 +27,14 @@ class GithubCommand extends Command
      *
      * @var  string
      */
-    protected $name = 'github';
+    protected $name = 'util';
 
     /**
      * Property description.
      *
      * @var  string
      */
-    protected $description = 'Github operation.';
+    protected $description = 'Some utilities tools.';
 
     /**
      * The usage to tell user how to use this command.
@@ -63,7 +63,7 @@ class GithubCommand extends Command
      */
     protected function init()
     {
-        $this->addCommand(Ioc::make(AddSshCommand::class));
+        $this->addCommand(Ioc::make(SshKeyCommand::class));
     }
 
     /**

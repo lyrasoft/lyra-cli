@@ -8,7 +8,9 @@
  */
 
 use Lyrasoft\Cli\{
-    Application, Ioc, Service\AppProvider
+    Application,
+    Ioc,
+    Provider\AppProvider
 };
 use Lyrasoft\Cli\Command;
 
@@ -35,6 +37,7 @@ $app->addCommand(Ioc::make(Command\PstormCommand::class));
 $app->addCommand(Ioc::make(Command\GetPrCommand::class));
 $app->addCommand(Ioc::make(Command\SnifferCommand::class));
 $app->addCommand(Ioc::make(Command\GithubCommand::class));
+$app->addCommand(Ioc::make(Command\UtilCommand::class));
 
 try {
     $code = $app->execute();
