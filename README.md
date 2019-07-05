@@ -18,7 +18,7 @@ lyra <command>
 
 來執行相關指令。
 
-### Mac 無法執行時
+### Mac / Linux 無法執行時
 
 Mac 必須先將 ~/.composer/vendor/bin 加入到 PATH 環境變數
 
@@ -27,6 +27,13 @@ Mac 必須先將 ~/.composer/vendor/bin 加入到 PATH 環境變數
 ```bash
 echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bash_profile
 source ~/.bash_profile
+```
+
+Linux 的路徑比較不一樣
+
+```bash
+echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ## 常用功能說明
