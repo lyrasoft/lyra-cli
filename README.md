@@ -25,8 +25,7 @@ Mac 必須先將 ~/.composer/vendor/bin 加入到 PATH 環境變數
 請參考 https://stackoverflow.com/a/25373254
 
 ```bash
-vim ~/.bash_profile
-export PATH=$HOME/.composer/vendor/bin:$PATH
+echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
