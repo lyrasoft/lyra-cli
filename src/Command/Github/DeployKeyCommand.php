@@ -19,13 +19,16 @@ use Windwalker\Console\Prompter\PasswordPrompter;
 use Windwalker\Console\Prompter\Prompter;
 use Windwalker\DI\Annotation\Inject;
 use Windwalker\Filesystem\File;
+use Windwalker\String\Str;
+use Windwalker\Structure\Format\IniFormat;
+use Windwalker\Structure\Structure;
 
 /**
  * The PushConfigCommand class.
  *
  * @since  __DEPLOY_VERSION__
  */
-class AddSshCommand extends Command
+class DeployKeyCommand extends Command
 {
     use RunProcessTrait;
 
@@ -34,7 +37,7 @@ class AddSshCommand extends Command
      *
      * @var  string
      */
-    protected $name = 'add-ssh';
+    protected $name = 'deploy-key';
 
     /**
      * Property description.
@@ -42,6 +45,15 @@ class AddSshCommand extends Command
      * @var  string
      */
     protected $description = 'Add ssh to your Github account.';
+
+    /**
+     * The usage to tell user how to use this command.
+     *
+     * @var string
+     *
+     * @since  2.0
+     */
+    protected $usage = '%s <cmd><command></cmd> <repository> <title> <option>[option]</option>';
 
     /**
      * The manual about this command.
@@ -94,7 +106,31 @@ class AddSshCommand extends Command
      */
     protected function doExecute()
     {
-        $title = (string) $this->getArgument(0);
+        $repo = (string) $this->getArgument(0);
+        $title = (string) $this->getArgument(1);
+
+        if (!$repo) {
+            // Github config
+            $configPath = getcwd() . '/.git/config';
+
+            $config = (new Structure())->loadString(
+                str_replace(' = ', '=', file_get_contents($configPath)),
+                'ini',
+                ['processSections' => true]
+            );
+
+            $url = $config->get('remote "origin".url');
+            
+            preg_match('/git\@github\.com\:(.+)\.git/', $url, $matches);
+            
+            $repo = $matches[1] ?? '';
+        }
+
+        if (!$repo || !Str::contains($repo, '/')) {
+            throw new \UnexpectedValueException('Unknown GitHub repository: ' . $repo);
+        }
+
+        [$account, $repo] = explode('/', $repo, 2);
 
         if ($title === '') {
             if (isset($_SERVER['COMPUTERNAME'])) {
@@ -108,7 +144,7 @@ class AddSshCommand extends Command
 
         $this->console->executeByPath('util ssh-key', ['m' => 1, 'r' => $this->getOption('r')], $this->io);
 
-        $this->out()->out('Starting to add SSH key to GitHub...');
+        $this->out()->out('Starting to add Deploy key to GitHub...');
 
         $username = Prompter::notNullText(
             'Username: ',
@@ -120,7 +156,7 @@ class AddSshCommand extends Command
 
         $passwordPrompter = (new PasswordPrompter(
             'Password: ',
-            function ($pass) use ($username, $title) {
+            function ($pass) use ($username) {
                 try {
                     $this->githubService->login($username, $pass);
                 } catch (RuntimeException $e) {
@@ -138,13 +174,9 @@ class AddSshCommand extends Command
             ->setNoValidMessage('Password invalid');
 
         $passwordPrompter->ask();
-
-        $this->githubService->registerSshKey(
-            $title,
-            $this->sshService->getPubKey()
-        );
-
-        $this->out()->out(sprintf('Added SSH Key: <info>%s</info> to your GitHub account.', $title));
+        
+        $this->githubService->getClient()->repository()->keys()
+            ->create($account, $repo, ['title' => $title, 'key' => $this->sshService->getPubKey()]);
 
         return true;
     }

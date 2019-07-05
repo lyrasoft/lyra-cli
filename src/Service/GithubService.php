@@ -46,6 +46,23 @@ class GithubService
      */
     public function login(string $username, string $password): void
     {
+        $this->auth($username, $password);
+
+        $this->client->users()->show($username);
+    }
+
+    /**
+     * login
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function auth(string $username, string $password): void
+    {
         $this->client->authenticate($username, $password, Client::AUTH_HTTP_PASSWORD);
     }
 
