@@ -2,9 +2,17 @@
 
 這是為了 LYRASOFT 日常工作與建立設定檔所開發的方便工具。
 
-## 安裝方式
+## 快速安裝
 
-請執行
+```bash
+php -r "copy('https://raw.githubusercontent.com/lyrasoft/lyra-cli/master/resources/installer/lyra-cli-installer.php', 'lyra-cli-installer.php');"
+php lyra-cli-installer.php
+php -r "unlink('lyra-cli-installer.php');"
+```
+
+## 一般安裝方式
+
+快速安裝無法正確執行時，請依照以下步驟進行：
 
 ```bash
 composer global require lyrasoft/cli
