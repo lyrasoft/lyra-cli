@@ -129,7 +129,6 @@ class DeployKeyCommand extends Command
 
             $repo = $matches[1] ?? '';
 
-            //https://github.com/lyrasoft/lyra-cli.git
             if (!$repo) {
                 preg_match('/https\:\/\/github\.com\/(.+)\.git/', $url, $matches);
 
