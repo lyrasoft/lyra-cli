@@ -63,12 +63,16 @@ class SshService
     /**
      * getRasPubFile
      *
+     * @param string|null $rsaFile
+     *
      * @return  string
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function getRasPubFile(): string
+    public function getRasPubFile(?string $rsaFile = null): string
     {
-        return $this->getRsaFile() . '.pub';
+        $rsaFile = $rsaFile ?: $this->getRsaFile();
+
+        return $rsaFile . '.pub';
     }
 }

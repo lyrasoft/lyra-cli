@@ -36,7 +36,8 @@ trait RunProcessTrait
         $timeout = 60,
         array $options = null
     ) {
-        return (new Process($commandline, $cwd, $env, $input, $timeout, $options))
+        return (new Process($commandline, $cwd, $env, null, $timeout, $options))
+            ->setInput($input)
             ->run(function ($type, $buffer) {
                 if (Process::ERR === $type) {
                     $this->err($buffer, false);

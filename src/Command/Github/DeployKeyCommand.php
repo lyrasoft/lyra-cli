@@ -19,6 +19,7 @@ use Windwalker\Console\Prompter\PasswordPrompter;
 use Windwalker\Console\Prompter\Prompter;
 use Windwalker\DI\Annotation\Inject;
 use Windwalker\Filesystem\File;
+use Windwalker\Filesystem\Folder;
 use Windwalker\String\Str;
 use Windwalker\Structure\Format\IniFormat;
 use Windwalker\Structure\Structure;
@@ -108,6 +109,9 @@ class DeployKeyCommand extends Command
     {
         $repo = (string) $this->getArgument(0);
         $title = (string) $this->getArgument(1);
+        $keyPath = $this->getOption('path') ?: getcwd() . '/.git/ssh/id_rsa';
+
+        Folder::create(dirname($keyPath));
 
         if (!$repo) {
             // Github config
@@ -122,8 +126,15 @@ class DeployKeyCommand extends Command
             $url = $config->get('remote "origin".url');
             
             preg_match('/git\@github\.com\:(.+)\.git/', $url, $matches);
-            
+
             $repo = $matches[1] ?? '';
+
+            //https://github.com/lyrasoft/lyra-cli.git
+            if (!$repo) {
+                preg_match('/https\:\/\/github\.com\/(.+)\.git/', $url, $matches);
+
+                $repo = $matches[1] ?? '';
+            }
         }
 
         if (!$repo || !Str::contains($repo, '/')) {
@@ -142,9 +153,34 @@ class DeployKeyCommand extends Command
             }
         }
 
-        $this->console->executeByPath('util ssh-key', ['m' => 1, 'r' => $this->getOption('r')], $this->io);
+        $refresh = $this->getOption('r');
 
-        $this->out()->out('Starting to add Deploy key to GitHub...');
+        if ($refresh && is_file($keyPath)) {
+            // Delete ssh cache
+            $this->runProcess(
+                sprintf('ssh-add -d "%s"', $keyPath),
+                getcwd()
+            );
+        }
+
+        $this->console->executeByPath(
+            ['util', 'ssh-key', $keyPath],
+            [
+                'm' => 1,
+                'r' => $refresh,
+                'C' => "$account/$repo"
+            ],
+            $this->io
+        );
+
+        // Add ssh cache
+        $this->runProcess(
+            sprintf('ssh-add "%s"', $keyPath),
+            getcwd()
+        );
+
+        $this->out()->out('Starting to add Deploy key to GitHub.')
+            ->out('<info>Login to GitHub...</info>');
 
         $username = Prompter::notNullText(
             'Username: ',
@@ -174,9 +210,15 @@ class DeployKeyCommand extends Command
             ->setNoValidMessage('Password invalid');
 
         $passwordPrompter->ask();
-        
+
         $this->githubService->getClient()->repository()->keys()
-            ->create($account, $repo, ['title' => $title, 'key' => $this->sshService->getPubKey()]);
+            ->create(
+                $account,
+                $repo,
+                ['title' => $title, 'key' => file_get_contents($this->sshService->getRasPubFile($keyPath))]
+            );
+
+        $this->out('Deploy key has successfully added to this repository.');
 
         return true;
     }

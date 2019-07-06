@@ -11,6 +11,7 @@ namespace Lyrasoft\Cli\Command\Util;
 use Lyrasoft\Cli\Environment\EnvironmentHelper;
 use Lyrasoft\Cli\Process\RunProcessTrait;
 use Lyrasoft\Cli\Service\SshService;
+use Symfony\Component\Process\InputStream;
 use Windwalker\Console\Command\Command;
 use Windwalker\Console\Prompter\BooleanPrompter;
 use Windwalker\DI\Annotation\Inject;
@@ -38,6 +39,15 @@ class SshKeyCommand extends Command
      * @var  string
      */
     protected $description = 'Create or show ssh key for Github.';
+
+    /**
+     * The usage to tell user how to use this command.
+     *
+     * @var string
+     *
+     * @since  2.0
+     */
+    protected $usage = '%s <cmd><key_file></cmd> <option>[option]</option>';
 
     /**
      * The manual about this command.
@@ -73,6 +83,10 @@ class SshKeyCommand extends Command
         $this->addOption('m')
             ->alias('mute')
             ->description('Do not show result key.');
+
+        $this->addOption('C')
+            ->alias('comment')
+            ->description('Key comment.');
     }
 
     /**
@@ -86,8 +100,8 @@ class SshKeyCommand extends Command
      */
     protected function doExecute()
     {
-        $rsaFile = $this->sshService->getRsaFile();
-        $rsaPubFile = $this->sshService->getRasPubFile();
+        $rsaFile = $this->getArgument(0) ?: $this->sshService->getRsaFile();
+        $rsaPubFile = $this->sshService->getRasPubFile($rsaFile);
 
         if (!is_file($rsaPubFile) || $this->getOption('r')) {
             if (is_file($rsaPubFile)) {
@@ -107,14 +121,16 @@ class SshKeyCommand extends Command
                 File::delete($rsaPubFile);
             }
 
-            $email = $this->in('Tell me your E-mail: ');
+//            $email = $this->in('Tell me your E-mail: ');
 
             $this->runProcess(
-                sprintf('ssh-keygen -t rsa -b 4096 -C "%s"', $email),
+                sprintf('ssh-keygen -t rsa -b 4096 -f "%s" -P "" -C "%s"', $rsaFile, $this->getOption('C')),
                 null,
                 null,
                 "\n\n\n\n"
             );
+
+            $this->out('Public key generated to: ' . $rsaPubFile);
         }
 
         if (!$this->getOption('m')) {
