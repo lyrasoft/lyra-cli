@@ -26,7 +26,7 @@ exec('lyra', $output, $r);
 
 if ($r === 127) {
     // Install LYRA CLI
-    system('global require lyrasoft/cli');
+    system('composer global require lyrasoft/cli');
 }
 
 $home = $_SERVER['HOME'] ?? $_SERVER['USERPROFILE'];
