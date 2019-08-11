@@ -9,19 +9,15 @@
 namespace Lyrasoft\Cli\Command\Github;
 
 use Github\Exception\RuntimeException;
-use Lyrasoft\Cli\Environment\EnvironmentHelper;
 use Lyrasoft\Cli\Process\RunProcessTrait;
 use Lyrasoft\Cli\Service\GithubService;
 use Lyrasoft\Cli\Service\SshService;
 use Windwalker\Console\Command\Command;
-use Windwalker\Console\Prompter\BooleanPrompter;
 use Windwalker\Console\Prompter\PasswordPrompter;
 use Windwalker\Console\Prompter\Prompter;
 use Windwalker\DI\Annotation\Inject;
-use Windwalker\Filesystem\File;
 use Windwalker\Filesystem\Folder;
 use Windwalker\String\Str;
-use Windwalker\Structure\Format\IniFormat;
 use Windwalker\Structure\Structure;
 
 /**
@@ -107,8 +103,8 @@ class DeployKeyCommand extends Command
      */
     protected function doExecute()
     {
-        $repo = (string) $this->getArgument(0);
-        $title = (string) $this->getArgument(1);
+        $repo    = (string) $this->getArgument(0);
+        $title   = (string) $this->getArgument(1);
         $keyPath = $this->getOption('path') ?: getcwd() . '/.git/ssh/id_rsa';
 
         Folder::create(dirname($keyPath));
@@ -124,7 +120,7 @@ class DeployKeyCommand extends Command
             );
 
             $url = $config->get('remote "origin".url');
-            
+
             preg_match('/git\@github\.com\:(.+)\.git/', $url, $matches);
 
             $repo = $matches[1] ?? '';

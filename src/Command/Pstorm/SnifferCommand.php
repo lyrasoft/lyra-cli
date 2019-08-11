@@ -100,7 +100,8 @@ class SnifferCommand extends Command
         $idea = getcwd() . '/.idea';
 
         if (!is_dir($idea)) {
-            throw new \RuntimeException('This path is not a PhpStorm project.');
+            $this->out('This path is not a PhpStorm project.');
+            $this->console->close();
         }
 
         GithubHelper::prepareRepo();
