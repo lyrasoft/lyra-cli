@@ -44,13 +44,19 @@ if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
         system('source ' . $path);
     }
 } else {
-    echo "Add \$HOME/.config/composer/vendor/bin to PATH\n";
+    $composerDir = $home . '/.config/composer/vendor/bin';
+
+    if (!is_dir($composerDir)) {
+        $composerDir = $home . '/.composer/vendor/bin';
+    }
+
+    echo "Add \$HOME/$composerDir to PATH\n";
 
     // Linux
     $path = $home . '/.bashrc';
 
-    if (strpos(file_get_contents($path), '$HOME/.config/composer/vendor/bin') === false) {
-        system('echo \'export PATH="$PATH:$HOME/.config/composer/vendor/bin"\' >> ' . $path);
+    if (strpos(file_get_contents($path), '$HOME/' . $composerDir) === false) {
+        system('echo \'export PATH="$PATH:$HOME/' . $composerDir . '"\' >> ' . $path);
         system('source ' . $path);
     }
 }
