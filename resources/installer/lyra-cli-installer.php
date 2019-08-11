@@ -44,10 +44,10 @@ if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
         system('source ' . $path);
     }
 } else {
-    $composerDir = $home . '/.config/composer/vendor/bin';
+    $composerDir = '.config/composer/vendor/bin';
 
-    if (!is_dir($composerDir)) {
-        $composerDir = $home . '/.composer/vendor/bin';
+    if (!is_dir($home . '/' . $composerDir)) {
+        $composerDir = '.composer/vendor/bin';
     }
 
     echo "Add \$HOME/$composerDir to PATH\n";
