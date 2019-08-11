@@ -9,6 +9,7 @@
 namespace Lyrasoft\Cli\Command\Github;
 
 use Github\Exception\RuntimeException;
+use Lyrasoft\Cli\Environment\EnvironmentHelper;
 use Lyrasoft\Cli\Process\RunProcessTrait;
 use Lyrasoft\Cli\Service\GithubService;
 use Lyrasoft\Cli\Service\SshService;
@@ -16,6 +17,7 @@ use Windwalker\Console\Command\Command;
 use Windwalker\Console\Prompter\PasswordPrompter;
 use Windwalker\Console\Prompter\Prompter;
 use Windwalker\DI\Annotation\Inject;
+use Windwalker\Environment\PlatformHelper;
 use Windwalker\Filesystem\Folder;
 use Windwalker\String\Str;
 use Windwalker\Structure\Structure;
@@ -105,7 +107,8 @@ class DeployKeyCommand extends Command
     {
         $repo    = (string) $this->getArgument(0);
         $title   = (string) $this->getArgument(1);
-        $keyPath = $this->getOption('path') ?: getcwd() . '/.git/ssh/id_rsa';
+
+        $keyPath = $this->getOption('path') ?: static::getKeyPath($repo);
 
         Folder::create(dirname($keyPath));
 
@@ -150,6 +153,9 @@ class DeployKeyCommand extends Command
 
         $refresh = $this->getOption('r');
 
+        // Add ssh-agent
+        $this->appendToProfile('eval $(ssh-agent)');
+
         if ($refresh && is_file($keyPath)) {
             // Delete ssh cache
             $this->runProcess(
@@ -173,6 +179,8 @@ class DeployKeyCommand extends Command
             sprintf('ssh-add "%s"', $keyPath),
             getcwd()
         );
+
+        $this->appendToProfile(sprintf('ssh-add "%s"', $keyPath));
 
         $this->out()->out('Starting to add Deploy key to GitHub.')
             ->out('<info>Login to GitHub...</info>');
@@ -216,5 +224,54 @@ class DeployKeyCommand extends Command
         $this->out('Deploy key has successfully added to this repository.');
 
         return true;
+    }
+
+    /**
+     * getKeyPath
+     *
+     * @param string $repo
+     *
+     * @return  string
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function getKeyPath(string $repo): string
+    {
+        $home = EnvironmentHelper::getUserDir();
+
+        $path = $home . '/.lyra/ssh/' . $repo . '/id_rsa';
+
+        if (!is_dir(dirname($path))) {
+            Folder::create(dirname($path));
+        }
+
+        return $path;
+    }
+
+    /**
+     * appendToProfile
+     *
+     * @param string      $content
+     * @param string|null $find
+     *
+     * @return  void
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    protected function appendToProfile(string $content, ?string $find = null): void
+    {
+        if (!PlatformHelper::isWindows()) {
+            if (PlatformHelper::isUnix()) {
+                $profile = EnvironmentHelper::getUserDir() . '/.bash_profile';
+            } else {
+                $profile = EnvironmentHelper::getUserDir() . '/.bashrc';
+            }
+
+            $find = $find ?: $content;
+
+            if (strpos(file_get_contents($profile), $find) === false) {
+                $this->runProcess(sprintf("echo '%s' >> %s", $content, $profile));
+            }
+        }
     }
 }

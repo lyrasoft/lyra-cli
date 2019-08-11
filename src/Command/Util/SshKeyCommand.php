@@ -121,8 +121,6 @@ class SshKeyCommand extends Command
                 File::delete($rsaPubFile);
             }
 
-//            $email = $this->in('Tell me your E-mail: ');
-
             $this->runProcess(
                 sprintf('ssh-keygen -t rsa -b 4096 -f "%s" -P "" -C "%s"', $rsaFile, $this->getOption('C')),
                 null,
