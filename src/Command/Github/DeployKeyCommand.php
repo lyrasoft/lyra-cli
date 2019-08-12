@@ -271,8 +271,9 @@ class DeployKeyCommand extends Command
 
             if (strpos(file_get_contents($profile), $find) === false) {
                 $this->runProcess(sprintf("echo '%s' >> %s", $content, $profile));
-                $this->runProcess(sprintf('source %s', $profile));
             }
+
+            $this->runProcess(sprintf('. %s', $profile));
         }
     }
 }
