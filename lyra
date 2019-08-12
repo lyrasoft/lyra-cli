@@ -41,9 +41,14 @@ $app->addCommand(Ioc::make(Command\UtilCommand::class));
 
 try {
     $code = $app->execute();
+
+    exit($code);
 } catch (\Throwable $e) {
-    echo $e;
+    if ($app->io->getOption('v')) {
+        $app->io->err((string) $e);
+    } else {
+        $app->io->err($e->getMessage());
+    }
+
     exit(255);
 }
-
-exit($code);
