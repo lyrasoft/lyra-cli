@@ -32,7 +32,7 @@ class Application extends Console
      *
      * @var  string
      */
-    protected $version = '1.0.0';
+    protected $version = null;
 
     /**
      * Property description.
@@ -55,8 +55,10 @@ class Application extends Console
      * @param Structure|null   $config
      * @param Container        $container
      */
-    public function __construct(IOInterface $io = null, Structure $config = null, Container $container)
+    public function __construct(IOInterface $io, Structure $config, Container $container)
     {
+        $this->version = trim(file_get_contents(__DIR__ . '/../VERSION'));
+
         parent::__construct($io, $config);
 
         $this->container = $container;
