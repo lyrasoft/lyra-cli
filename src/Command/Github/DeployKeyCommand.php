@@ -156,7 +156,8 @@ class DeployKeyCommand extends Command
         $r = $this->runProcess('ssh-add');
 
         if ($r !== 0) {
-            throw new \RuntimeException('Please run `<info>eval $(ssh-agent)</info>` first.');
+            $this->out('Please run `<info>eval $(ssh-agent)</info>` first.');
+            $this->console->close(1);
         }
 
         // Add ssh-agent
