@@ -14,6 +14,11 @@ include_once __DIR__ . '/Console.php';
 
 class Build extends Console
 {
+    /**
+     * Property help.
+     *
+     * @var  string
+     */
     protected $help = <<<HELP
 [Usage] php release.php <version> <next_version>
 
@@ -115,3 +120,5 @@ HELP;
         return $version;
     }
 }
+
+exit((new Build())->execute());
