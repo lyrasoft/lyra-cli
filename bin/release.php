@@ -52,6 +52,7 @@ HELP;
         static::writeVersion($targetVersion);
 
         $this->exec(sprintf('git commit -am "Release version: %s"', $targetVersion));
+        $this->exec(sprintf('git tag %s', $targetVersion));
 
         $nextVersion = $this->getArgument(1) ?: static::versionPlus($targetVersion, 1, 'dev');
 
@@ -62,6 +63,7 @@ HELP;
         $this->exec(sprintf('git commit -am "Prepare %s dev."', $nextVersion));
 
         $this->exec('git push');
+        $this->exec('git push --tags');
 
         return true;
     }
