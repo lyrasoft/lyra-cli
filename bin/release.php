@@ -40,7 +40,11 @@ HELP;
         $targetVersion = $this->getArgument(0);
 
         if (!$targetVersion) {
-            $targetVersion = static::versionPlus($currentVersion);
+            if (strpos($currentVersion, '-dev') !== false) {
+                $targetVersion = static::versionPlus($currentVersion, 0, '');
+            } else {
+                $targetVersion = static::versionPlus($currentVersion, 1);
+            }
         }
 
         $this->out('Release version: ' . $targetVersion);
@@ -49,7 +53,7 @@ HELP;
 
         $this->exec(sprintf('git commit -am "Release version: %s"', $targetVersion));
 
-        $nextVersion = $this->getArgument(1) ?: static::versionPlus($targetVersion, 1, '-dev');
+        $nextVersion = $this->getArgument(1) ?: static::versionPlus($targetVersion, 1, 'dev');
 
         $this->out('Prepare version: ' . $nextVersion);
 
@@ -99,7 +103,7 @@ HELP;
      *
      * @since  __DEPLOY_VERSION__
      */
-    protected static function versionPlus(string $version, int $offset = 1, string $suffix = ''): string
+    protected static function versionPlus(string $version, int $offset, string $suffix = ''): string
     {
         [$version] = explode('-', $version, 2);
 
@@ -110,6 +114,10 @@ HELP;
         }
 
         $numbers[2] += $offset;
+
+        if ($numbers[2] === 0) {
+            unset($numbers[2]);
+        }
 
         $version = implode('.', $numbers);
 
