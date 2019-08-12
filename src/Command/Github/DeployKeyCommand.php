@@ -261,10 +261,10 @@ class DeployKeyCommand extends Command
     protected function appendToProfile(string $content, ?string $find = null): void
     {
         if (!PlatformHelper::isWindows()) {
-            if (PlatformHelper::isUnix()) {
-                $profile = EnvironmentHelper::getUserDir() . '/.bash_profile';
-            } else {
+            if (PlatformHelper::isLinux()) {
                 $profile = EnvironmentHelper::getUserDir() . '/.bashrc';
+            } else {
+                $profile = EnvironmentHelper::getUserDir() . '/.bash_profile';
             }
 
             $find = $find ?: $content;
