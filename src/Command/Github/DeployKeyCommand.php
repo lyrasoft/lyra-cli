@@ -154,7 +154,7 @@ class DeployKeyCommand extends Command
         $refresh = $this->getOption('r');
 
         $r = $this->runProcess('ssh-add');
-
+var_dump($r);
         if ($r !== 0) {
             $this->out('Please run `<info>eval $(ssh-agent)</info>` first.');
             $this->console->close(1);
