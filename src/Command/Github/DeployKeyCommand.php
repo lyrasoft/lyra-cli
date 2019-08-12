@@ -153,6 +153,12 @@ class DeployKeyCommand extends Command
 
         $refresh = $this->getOption('r');
 
+        $r = $this->runProcess('ssh-add');
+
+        if ($r !== 0) {
+            throw new \RuntimeException('Please run `<info>eval $(ssh-agent)</info>` first.');
+        }
+
         // Add ssh-agent
         $this->appendToProfile('eval $(ssh-agent)');
 
@@ -179,8 +185,6 @@ class DeployKeyCommand extends Command
             sprintf('ssh-add "%s"', $keyPath),
             getcwd()
         );
-
-        $this->appendToProfile(sprintf('ssh-add "%s"', $keyPath));
 
         $this->out()->out('Starting to add Deploy key to GitHub.')
             ->out('<info>Login to GitHub...</info>');
