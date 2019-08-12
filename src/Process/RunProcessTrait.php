@@ -36,6 +36,12 @@ trait RunProcessTrait
         $timeout = 60,
         array $options = null
     ) {
+        $commandline = implode(' ', (array) $commandline);
+
+        if ($this->console) {
+            $this->console->addMessage('>> ' . $commandline);
+        }
+
         return (new Process($commandline, $cwd, $env, null, $timeout, $options))
             ->setInput($input)
             ->run(function ($type, $buffer) {
