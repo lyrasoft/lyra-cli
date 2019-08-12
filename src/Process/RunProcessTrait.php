@@ -38,8 +38,8 @@ trait RunProcessTrait
     ) {
         $commandline = implode(' ', (array) $commandline);
 
-        if ($this->console) {
-            $this->console->addMessage('>> ' . $commandline);
+        if (class_exists($this, 'out')) {
+            $this->out('>> ' . $commandline);
         }
 
         return (new Process($commandline, $cwd, $env, null, $timeout, $options))
