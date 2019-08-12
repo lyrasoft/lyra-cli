@@ -38,7 +38,7 @@ trait RunProcessTrait
     ) {
         $commandline = implode(' ', (array) $commandline);
 
-        if (class_exists($this, 'out')) {
+        if (method_exists($this, 'out')) {
             $this->out('>> ' . $commandline);
         }
 
