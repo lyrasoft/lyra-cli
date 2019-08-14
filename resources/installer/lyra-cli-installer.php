@@ -57,7 +57,7 @@ if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
 
     if (strpos(file_get_contents($path), '$HOME/' . $composerDir) === false) {
         system('echo \'export PATH="$PATH:$HOME/' . $composerDir . '"\' >> ' . $path);
-        system('source ' . $path);
+        system('. ' . $path);
     }
 }
 
