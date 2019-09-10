@@ -101,7 +101,7 @@ class SshKeyCommand extends Command
     protected function doExecute()
     {
         $rsaFile = $this->getArgument(0) ?: $this->sshService->getRsaFile();
-        $rsaPubFile = $this->sshService->getRasPubFile($rsaFile);
+        $rsaPubFile = $this->sshService->getRsaPubFile($rsaFile);
 
         if (!is_file($rsaPubFile) || $this->getOption('r')) {
             if (is_file($rsaPubFile)) {

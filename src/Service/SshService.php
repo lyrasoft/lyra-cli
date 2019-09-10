@@ -45,7 +45,7 @@ class SshService
      */
     public function getPubKey(): string
     {
-        return file_get_contents($this->getRasPubFile());
+        return file_get_contents($this->getRsaPubFile());
     }
 
     /**
@@ -69,7 +69,7 @@ class SshService
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function getRasPubFile(?string $rsaFile = null): string
+    public function getRsaPubFile(?string $rsaFile = null): string
     {
         $rsaFile = $rsaFile ?: $this->getRsaFile();
 

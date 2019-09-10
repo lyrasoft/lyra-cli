@@ -108,10 +108,6 @@ class DeployKeyCommand extends Command
         $repo    = (string) $this->getArgument(0);
         $title   = (string) $this->getArgument(1);
 
-        $keyPath = $this->getOption('path') ?: static::getKeyPath($repo);
-
-        Folder::create(dirname($keyPath));
-
         if (!$repo) {
             // Github config
             $configPath = getcwd() . '/.git/config';
@@ -138,6 +134,10 @@ class DeployKeyCommand extends Command
         if (!$repo || !Str::contains($repo, '/')) {
             throw new \UnexpectedValueException('Unknown GitHub repository: ' . $repo);
         }
+
+        $keyPath = $this->getOption('path') ?: static::getKeyPath($repo);
+
+        Folder::create(dirname($keyPath));
 
         [$account, $repo] = explode('/', $repo, 2);
 
@@ -181,11 +181,12 @@ class DeployKeyCommand extends Command
             $this->io
         );
 
+        $sshAdd = sprintf('ssh-add "%s"', $keyPath);
+
         // Add ssh cache
-        $this->runProcess(
-            sprintf('ssh-add "%s"', $keyPath),
-            getcwd()
-        );
+        $this->runProcess($sshAdd, getcwd());
+
+        $this->appendToProfile($sshAdd);
 
         $this->out()->out('Starting to add Deploy key to GitHub.')
             ->out('<info>Login to GitHub...</info>');
@@ -223,7 +224,7 @@ class DeployKeyCommand extends Command
             ->create(
                 $account,
                 $repo,
-                ['title' => $title, 'key' => file_get_contents($this->sshService->getRasPubFile($keyPath))]
+                ['title' => $title, 'key' => file_get_contents($this->sshService->getRsaPubFile($keyPath))]
             );
 
         $this->out('Deploy key has successfully added to this repository.');
