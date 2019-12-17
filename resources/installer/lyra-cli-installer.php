@@ -6,9 +6,9 @@
  * @license    __LICENSE__
  */
 
-exec('composer', $output, $r);
+exec('which composer', $output, $r);
 
-if ($r === 127) {
+if ($r !== 0) {
     if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
         exit('Please install composer first: https://getcomposer.org/download/');
     }
@@ -22,9 +22,9 @@ if ($r === 127) {
     rename(getcwd() . '/composer.phar', '/usr/local/bin/composer');
 }
 
-exec('lyra', $output, $r);
+exec('which lyra', $output, $r);
 
-if ($r === 127) {
+if ($r !== 0) {
     // Install LYRA CLI
     system('composer global require lyrasoft/cli');
 }
