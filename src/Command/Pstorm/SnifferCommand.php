@@ -119,7 +119,7 @@ class SnifferCommand extends Command
         $xml = new \SimpleXMLElement(file_get_contents($configFile));
 
         // Let's prepare XML deep nodes
-        $component = $xml->xpath('//component[@name="PhpCodeSniffer"]')[0];
+        $component = $xml->xpath('//component[@name="PhpCodeSniffer"]')[0] ?? null;
 
         if (!isset($component)) {
             $component = $xml->addChild('component');
