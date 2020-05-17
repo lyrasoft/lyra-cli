@@ -116,6 +116,10 @@ class SnifferCommand extends Command
 
         $configFile = $idea . '/php.xml';
 
+        if (!is_file($configFile)) {
+            File::write($configFile, '<project />');
+        }
+
         $xml = new \SimpleXMLElement(file_get_contents($configFile));
 
         // Let's prepare XML deep nodes
