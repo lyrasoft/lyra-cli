@@ -106,7 +106,7 @@ class PushConfigCommand extends Command
         $this->out(); // New line
 
         $configFolder = PhpStormHelper::getConfigFolder();
-        
+
         GithubHelper::prepareRepo();
 
         foreach ($configs as $configName => $enabled) {

@@ -121,6 +121,8 @@ class PullConfigCommand extends Command
 
         GithubHelper::prepareRepo();
 
+        $this->out(sprintf('Found config dir: <info>%s</info>', $configFolder));
+
         foreach ($configs as $configName => $enabled) {
             if (!$enabled) {
                 continue;

@@ -11,6 +11,7 @@ namespace Lyrasoft\Cli\PhpStorm;
 use Lyrasoft\Cli\Environment\EnvironmentHelper;
 use Lyrasoft\Cli\Ioc;
 use Windwalker\Environment\Environment;
+use Windwalker\Filesystem\Filesystem;
 
 /**
  * The PhpStormHelper class.
@@ -35,20 +36,27 @@ class PhpStormHelper
 
         $home = EnvironmentHelper::getUserDir();
 
+        // @see https://www.jetbrains.com/help/phpstorm/tuning-the-ide.html#config-directory
         if ($env->getPlatform()->isUnix()) {
-            $folderPattern = $home . '/Library/Preferences/PhpStorm*';
+            $folderPatterns = [
+                '/Library/Preferences/PhpStorm*',
+                '/Library/Application Support/JetBrains/PhpStorm*',
+            ];
         } elseif ($env->getPlatform()->isWin()) {
-            $folderPattern = $home . '/AppData/Roaming/JetBrains/PhpStorm*/jba_config';
+            $folderPatterns = [
+                '/.PhpStorm*/config',
+                '/AppData/Roaming/JetBrains/PhpStorm*/jba_config',
+            ];
         } else {
             throw new \RuntimeException('Only support Mac and Windows now.');
         }
 
-        $folders = glob($folderPattern);
+        $folders = Filesystem::globAll($home, $folderPatterns);
 
         $configFolder = array_pop($folders);
 
         if ($configFolder === null) {
-            throw new \RuntimeException('Phpstorm config folder not found in: ' . \dirname($folderPattern));
+            throw new \RuntimeException('Phpstorm config folder not found.');
         }
 
         return $configFolder;
