@@ -38,7 +38,7 @@ class PhpStormHelper
         if ($env->getPlatform()->isUnix()) {
             $folderPattern = $home . '/Library/Preferences/PhpStorm*';
         } elseif ($env->getPlatform()->isWin()) {
-            $folderPattern = $home . '/.PhpStorm*/config';
+            $folderPattern = $home . '/AppData/Roaming/JetBrains/PhpStorm*/jba_config';
         } else {
             throw new \RuntimeException('Only support Mac and Windows now.');
         }

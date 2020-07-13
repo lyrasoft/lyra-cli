@@ -10,10 +10,13 @@ namespace Lyrasoft\Cli\Command\Pstorm;
 
 use Lyrasoft\Cli\Github\DevtoolsHelper;
 use Lyrasoft\Cli\Github\GithubHelper;
+use Lyrasoft\Cli\Ioc;
 use Lyrasoft\Cli\PhpStorm\PhpStormHelper;
 use Windwalker\Console\Command\Command;
+use Windwalker\Environment\Environment;
 use Windwalker\Filesystem\File;
 use Windwalker\Filesystem\Folder;
+use Windwalker\Filesystem\Path;
 
 /**
  * The PushConfigCommand class.
@@ -92,6 +95,8 @@ class PullConfigCommand extends Command
      */
     protected function doExecute()
     {
+        $env = Ioc::get(Environment::class);
+
         $configs = [
             'fileTemplates' => $this->getOption('a') ? true : (bool) $this->getOption('f'),
             'codestyles'    => $this->getOption('a') ? true : (bool) $this->getOption('c'),
@@ -133,6 +138,11 @@ class PullConfigCommand extends Command
                 $this->out(sprintf('[Updated] <info>%s</info>', $destFile));
 
                 File::write($destFile, file_get_contents($srcFile));
+            }
+
+            if ($configName === 'fileTemplates' && $env->getPlatform()->isWin()) {
+                $this->out(sprintf('Move: %s to %s', $configFolder . '/' . $configName, Path::normalize($configFolder . '/..')));
+                Folder::move($configFolder . '/' . $configName, $configFolder . '/../' . $configName, true);
             }
         }
 
