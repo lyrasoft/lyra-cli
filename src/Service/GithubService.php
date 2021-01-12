@@ -47,12 +47,94 @@ class GithubService
     }
 
     /**
-     * deviceAuth
+     * tokenFile
+     *
+     * @return  \SplFileInfo
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public static function tokenFile(): \SplFileInfo
+    {
+        return new \SplFileInfo(LYRA_TMP . '/github-token');
+    }
+
+    /**
+     * getStoredToken
+     *
+     * @return  string|null
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function getStoredToken(): ?string
+    {
+        $tokenFile = static::tokenFile();
+
+        if (is_file($tokenFile->getPathname())) {
+            return trim(file_get_contents($tokenFile->getPathname()));
+        }
+
+        return null;
+    }
+
+    /**
+     * generateToken
+     *
+     * @param IO $io
      *
      * @return  string
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function generateToken(IO $io): string
+    {
+        $tokenFile = static::tokenFile();
+
+        $token = $this->deviceAuth($io);
+
+        file_put_contents($tokenFile->getPathname(), $token);
+
+        return $token;
+    }
+
+    /**
+     * askForToken
+     *
+     * @param IO $io
+     *
+     * @return  string
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function askForToken(IO $io): string
+    {
+        $io->out('Token not exists, please choose an action. [1]');
+        $io->out('- [1] Create new token. (Only for your own device)');
+        $io->out('- [2] Paste a token from your device');
+
+        $v = $io->in() ?: '1';
+
+        if (trim($v) === '2') {
+            $io->out();
+            $io->out('Please run `<info>lyra github token</info>` on your computer and paste here.');
+            $io->out('Your token: ', false);
+            return $io->in();
+        }
+
+        return $this->deviceAuth($io);
+    }
+
+    /**
+     * deviceAuth
+     *
+     * @param IO $io
+     *
+     * @return  string
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @since  __DEPLOY_VERSION__
      */
     public function deviceAuth(IO $io): string
@@ -156,7 +238,7 @@ class GithubService
     public function openBrowser(string $url): void
     {
         $cmd = $this->environment->getPlatform()->isWin()
-            ? 'start'
+            ? 'explorer'
             : 'open';
 
         exec(

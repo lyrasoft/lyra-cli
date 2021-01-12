@@ -15,8 +15,8 @@ namespace Lyrasoft\Cli\Github;
  */
 class DevtoolsHelper
 {
-    const REPO = 'lyrasoft/development-tools';
-    const TMP_FOLDER = 'development-tools';
+    public const REPO = 'lyrasoft/development-tools';
+    public const TMP_FOLDER = 'development-tools';
 
     /**
      * getUsername

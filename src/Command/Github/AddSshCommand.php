@@ -110,9 +110,13 @@ class AddSshCommand extends Command
 
         $this->out()->out('Starting to add SSH key to GitHub...');
 
-        $this->githubService->auth(
-            $this->githubService->deviceAuth($this->getIO())
-        );
+        $token = $this->githubService->getStoredToken();
+
+        if (!$token) {
+            $token = $this->githubService->askForToken($this->getIO());
+        }
+
+        $this->githubService->auth($token);
 
         $this->githubService->registerSshKey(
             $title,

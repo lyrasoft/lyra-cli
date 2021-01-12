@@ -153,11 +153,13 @@ class DeployKeyCommand extends Command
 
         $refresh = $this->getOption('r');
 
-        $r = $this->runProcess('ssh-add');
+        if (!PlatformHelper::isWindows()) {
+            $r = $this->runProcess('ssh-add');
 
-        if ($r === 2) {
-            $this->out('Please run `<info>eval $(ssh-agent)</info>` first.');
-            $this->console->close(1);
+            if ($r === 2) {
+                $this->out('Please run `<info>eval $(ssh-agent)</info>` first.');
+                $this->console->close(1);
+            }
         }
 
         // Add ssh-agent
@@ -188,12 +190,17 @@ class DeployKeyCommand extends Command
 
         $this->appendToProfile($sshAdd);
 
-        $this->out()->out('Starting to add Deploy key to GitHub.')
-            ->out('<info>Login to GitHub...</info>');
+        $this->out()
+            ->out('Starting to add Deploy key to GitHub.')
+            ->out('<info>Access GitHub...</info>');
 
-        $this->githubService->auth(
-            $this->githubService->deviceAuth($this->getIO())
-        );
+        $token = $this->githubService->getStoredToken();
+
+        if (!$token) {
+            $token = $this->githubService->askForToken($this->getIO());
+        }
+
+        $this->githubService->auth($token);
 
         $this->githubService->getClient()->repository()->keys()
             ->create(
