@@ -99,6 +99,7 @@ class TokenCommand extends Command
             $token = $this->githubService->generateToken($this->getIO());
         }
 
+        $this->out('TOKEN:');
         $this->out("<info>$token</info>");
 
         return true;

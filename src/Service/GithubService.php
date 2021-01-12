@@ -158,18 +158,18 @@ class GithubService
 
         $data = json_decode((string) $res->getBody(), true);
 
-        $io->out("Please enter this code to your browser: <info>{$data['user_code']}</info>");
+        $io->out("Please fill: <info>{$data['user_code']}</info> to github.com.");
+        $io->out('Click [ENTER] to open browser...');
+        $io->in();
+        $io->out('Now waiting GitHub response...');
 
         $this->openBrowser($data['verification_uri']);
-
-        sleep(5);
 
         $total = 0;
 
         while (!$token = $this->accessToken($data['device_code'])) {
             if ($total > 150) {
                 throw new \RuntimeException('Please enter code in 150 seconds.');
-                break;
             }
 
             $total += 6;
