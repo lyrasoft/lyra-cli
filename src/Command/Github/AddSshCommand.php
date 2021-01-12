@@ -110,34 +110,9 @@ class AddSshCommand extends Command
 
         $this->out()->out('Starting to add SSH key to GitHub...');
 
-        $username = Prompter::notNullText(
-            'Username: ',
-            '',
-            'Please enter username.',
-            3,
-            'No username.'
+        $this->githubService->auth(
+            $this->githubService->deviceAuth($this->getIO())
         );
-
-        $passwordPrompter = (new PasswordPrompter(
-            'Password: ',
-            function ($pass) use ($username, $title) {
-                try {
-                    $this->githubService->login($username, $pass);
-                } catch (RuntimeException $e) {
-                    if ($e->getCode() === 401) {
-                        return false;
-                    }
-
-                    throw $e;
-                }
-
-                return true;
-            }
-        ))->setAttemptTimes(3)
-            ->failToClose(true)
-            ->setNoValidMessage('Password invalid');
-
-        $passwordPrompter->ask();
 
         $this->githubService->registerSshKey(
             $title,
