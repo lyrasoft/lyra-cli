@@ -160,7 +160,7 @@ class GithubService
 
         $io->out("Please fill: <info>{$data['user_code']}</info> to github.com.");
         $io->out("Open {$data['verification_uri']} from browser.");
-        $io->in();
+        // $io->in();
         $io->out('Now waiting GitHub response...');
 
         $this->openBrowser($data['verification_uri']);
