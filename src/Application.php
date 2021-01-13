@@ -75,4 +75,24 @@ class Application extends Console
     {
         return $this->container;
     }
+
+    /**
+     * handleException
+     *
+     * @param \Throwable $e
+     *
+     * @return  void
+     *
+     * @since  3.5.2
+     */
+    public function handleException(\Throwable $e): void
+    {
+        if ($this->io->getOption('v')) {
+            $this->io->err((string) $e);
+        } else {
+            $this->io->err($e->getMessage());
+        }
+
+        exit($e->getMessage() ?: 255);
+    }
 }

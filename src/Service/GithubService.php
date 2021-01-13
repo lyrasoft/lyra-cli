@@ -117,7 +117,7 @@ class GithubService
                 'body' => json_encode(
                     [
                         'client_id' => static::CLIENT_ID,
-                        'scope' => 'repo'
+                        'scope' => 'repo,write:public_key'
                     ]
                 ),
                 'headers' => [
