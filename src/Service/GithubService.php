@@ -99,35 +99,6 @@ class GithubService
     }
 
     /**
-     * askForToken
-     *
-     * @param IO $io
-     *
-     * @return  string
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     *
-     * @since  __DEPLOY_VERSION__
-     */
-    public function askForToken(IO $io): string
-    {
-        $io->out('Token not exists, please choose an action. [1]');
-        $io->out('- [1] Create new token. (Only for your own device)');
-        $io->out('- [2] Paste a token from your device');
-
-        $v = $io->in() ?: '1';
-
-        if (trim($v) === '2') {
-            $io->out();
-            $io->out('Please run `<info>lyra github token</info>` on your computer and paste here.');
-            $io->out('Your token: ', false);
-            return $io->in();
-        }
-
-        return $this->deviceAuth($io);
-    }
-
-    /**
      * deviceAuth
      *
      * @param IO $io
@@ -159,11 +130,10 @@ class GithubService
         $data = json_decode((string) $res->getBody(), true);
 
         $io->out("Please fill: <info>{$data['user_code']}</info> to github.com.");
-        $io->out("Open {$data['verification_uri']} from browser.");
-        // $io->in();
-        $io->out('Now waiting GitHub response...');
 
-        $this->openBrowser($data['verification_uri']);
+        $this->openBrowser($data['verification_uri'], $io);
+
+        $io->out('Now waiting GitHub response...');
 
         $total = 0;
 
@@ -230,13 +200,25 @@ class GithubService
      * openBrowser
      *
      * @param string $url
+     * @param IO     $io
      *
      * @return  void
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function openBrowser(string $url): void
+    public function openBrowser(string $url, IO $io): void
     {
+        // Do we conneted by SSH?
+        $output = exec('echo $SSH_CONNECTION');
+
+        if (trim($output)) {
+            $io->out("Open <info>{$url}</info> from your local browser.");
+            return;
+        }
+
+        $io->out("Press [ENTER] to open browser.");
+        $io->in();
+
         $cmd = $this->environment->getPlatform()->isWin()
             ? 'explorer'
             : 'open';

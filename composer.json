@@ -27,7 +27,8 @@
         "php-di/phpdoc-reader": "^2.1",
         "filp/whoops": "^2.4",
         "ext-simplexml": "*",
-        "ext-dom": "*"
+        "ext-dom": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master"

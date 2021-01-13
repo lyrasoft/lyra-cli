@@ -113,7 +113,7 @@ class AddSshCommand extends Command
         $token = $this->githubService->getStoredToken();
 
         if (!$token) {
-            $token = $this->githubService->askForToken($this->getIO());
+            $token = $this->githubService->deviceAuth($this->getIO());
         }
 
         $this->githubService->auth($token);
