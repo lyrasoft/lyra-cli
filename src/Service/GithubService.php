@@ -159,7 +159,7 @@ class GithubService
         $data = json_decode((string) $res->getBody(), true);
 
         $io->out("Please fill: <info>{$data['user_code']}</info> to github.com.");
-        $io->out('Click [ENTER] to open browser...');
+        $io->out("Open {$data['verification_uri']} from browser.");
         $io->in();
         $io->out('Now waiting GitHub response...');
 
