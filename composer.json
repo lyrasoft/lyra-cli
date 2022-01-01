@@ -11,36 +11,41 @@
         }
     ],
     "require": {
-        "php": ">=7.1.3",
-        "windwalker/console": "~3.0",
-        "windwalker/environment": "^3.3",
-        "windwalker/di": "^3.3",
-        "windwalker/utilities": "^3.3",
-        "windwalker/filesystem": "^3.3",
-        "knplabs/github-api": "^2.11||^3.0",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "http-interop/http-factory-guzzle": "^1.0",
-        "windwalker/http": "^3.5",
-        "symfony/process": "^3.0||^4.0",
-        "squizlabs/php_codesniffer": "3.4.*",
-        "doctrine/annotations": "^1.6",
-        "php-di/phpdoc-reader": "^2.1",
-        "filp/whoops": "^2.4",
+        "php": ">=8.0",
+        "psr/cache": "^2.0",
+        "symfony/console": "^4.0||^5.0||^6.0",
+        "windwalker/environment": "^4.0",
+        "windwalker/di": "^4.0",
+        "windwalker/utilities": "^4.0",
+        "windwalker/filesystem": "^4.0",
+        "symfony/process": "^4.0||^5.0||^6.0",
+        "squizlabs/php_codesniffer": "^3.0",
         "ext-simplexml": "*",
         "ext-dom": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "windwalker/event": "^4.0",
+        "symfony/contracts": "^2.0||^3.0",
+        "windwalker/attributes": "^4.0",
+        "stecman/symfony-console-completion": "^0.11.0",
+        "knplabs/github-api": "^3.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "http-interop/http-factory-guzzle": "^1.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master"
     },
     "autoload": {
         "psr-4": {
-            "Lyrasoft\\Cli\\": "src/"
-        }
+            "Lyrasoft\\Cli\\": "src/",
+            "Windwalker\\Console\\": "windwalker/console/"
+        },
+        "files": [
+            "src/bootstrap.php"
+        ]
     },
     "config": {
         "platform": {
-            "php": "7.2.5"
+            "php": "8.0.1"
         }
     },
     "bin": [

@@ -9,10 +9,13 @@
 namespace Lyrasoft\Cli\Provider;
 
 use Lyrasoft\Cli\Application;
-use Windwalker\Console\AbstractConsole;
-use Windwalker\Console\Console;
-use Windwalker\Console\IO\IO;
-use Windwalker\Console\IO\IOInterface;
+use Lyrasoft\Cli\Services\EnvService;
+use Lyrasoft\Cli\Services\SshService;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Windwalker\Attributes\AttributeType;
+use Windwalker\Console\CommandWrapper;
+use Windwalker\Console\IO;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\Environment\Environment;
@@ -25,6 +28,10 @@ use Windwalker\Environment\Platform;
  */
 class AppProvider implements ServiceProviderInterface
 {
+    public function __construct(protected Application $app)
+    {
+    }
+
     /**
      * Registers the service provider with a DI container.
      *
@@ -32,16 +39,21 @@ class AppProvider implements ServiceProviderInterface
      *
      * @return  void
      */
-    public function register(Container $container)
+    public function register(Container $container): void
     {
         $container->share(Container::class, $container);
-        $container->bindShared(IOInterface::class, IO::class);
-
-        $container->prepareSharedObject(Application::class)
-            ->alias(Console::class, Application::class)
-            ->alias(AbstractConsole::class, Application::class);
 
         $container->prepareSharedObject(Platform::class);
         $container->prepareSharedObject(Environment::class);
+
+        // Services
+        $container->share(Application::class, $this->app);
+        $container->prepareSharedObject(SshService::class);
+        $container->prepareSharedObject(EnvService::class);
+
+        // Attributes
+        $attributeResolver = $container->getAttributesResolver();
+
+        $attributeResolver->registerAttribute(CommandWrapper::class, AttributeType::CLASSES);
     }
 }

@@ -9,10 +9,9 @@
 
 use Lyrasoft\Cli\{
     Application,
-    Ioc,
     Provider\AppProvider
 };
-use Lyrasoft\Cli\Command;
+use Windwalker\DI\Container;
 
 $autoload = __DIR__ . '/vendor/autoload.php';
 
@@ -22,33 +21,19 @@ if (!is_file($autoload)) {
 
 require $autoload;
 
-define('LYRA_ROOT', __DIR__);
-define('LYRA_SOURCE', __DIR__ . '/src');
-define('LYRA_TMP', __DIR__ . '/tmp');
+const LYRA_ROOT = __DIR__;
+const LYRA_SOURCE = __DIR__ . '/src';
+const LYRA_TMP = __DIR__ . '/tmp';
 
-$container = Ioc::getContainer();
-$container->registerServiceProvider(new AppProvider());
+$container = new Container();
 
 /** @var Application $app */
-$app = $container->get(Application::class);
+$app = $container->createSharedObject(Application::class);
 
-// Register commands
-$app->addCommand(Ioc::make(Command\PstormCommand::class));
-$app->addCommand(Ioc::make(Command\GetPrCommand::class));
-$app->addCommand(Ioc::make(Command\SnifferCommand::class));
-$app->addCommand(Ioc::make(Command\GithubCommand::class));
-$app->addCommand(Ioc::make(Command\UtilCommand::class));
+$app->boot();
 
-try {
-    $code = $app->execute();
+$commands = require __DIR__ . '/etc/commands.php';
 
-    exit($code);
-} catch (\Throwable $e) {
-    if ($app->io->getOption('v')) {
-        $app->io->err((string) $e);
-    } else {
-        $app->io->err($e->getMessage());
-    }
+$app->registerCommands($commands);
 
-    exit(255);
-}
+$app->run();

@@ -1,39 +1,23 @@
 <?php
+
 /**
  * Part of cli project.
  *
- * @copyright  Copyright (C) 2019 .
+ * @copyright  Copyright (C) 2022 __ORGANIZATION__.
  * @license    __LICENSE__
  */
 
-namespace Lyrasoft\Cli\Service;
+declare(strict_types=1);
 
-use Lyrasoft\Cli\Environment\EnvironmentHelper;
-use Windwalker\Console\IO\IOInterface;
-use Windwalker\Filesystem\File;
+namespace Lyrasoft\Cli\Services;
 
 /**
- * The SsshSErvice class.
- *
- * @since  __DEPLOY_VERSION__
+ * The SshService class.
  */
 class SshService
 {
-    /**
-     * Property io.
-     *
-     * @var  IOInterface
-     */
-    protected $io;
-
-    /**
-     * SshService constructor.
-     *
-     * @param IOInterface $io
-     */
-    public function __construct(IOInterface $io)
+    public function __construct(protected EnvService $envService)
     {
-        $this->io = $io;
     }
 
     /**
@@ -55,9 +39,9 @@ class SshService
      *
      * @since  __DEPLOY_VERSION__
      */
-    public function getRsaFile():string
+    public function getRsaFile(): string
     {
-        return EnvironmentHelper::getUserDir() . '/.ssh/id_rsa';
+        return $this->envService->getUserDir() . '/.ssh/id_rsa';
     }
 
     /**
