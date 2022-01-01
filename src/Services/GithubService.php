@@ -13,8 +13,10 @@ namespace Lyrasoft\Cli\Services;
 
 use Github\AuthMethod;
 use Github\Client;
+use Lyrasoft\Cli\Application;
 use Windwalker\Console\IO;
 use Windwalker\Environment\Environment;
+use Windwalker\Environment\PlatformHelper;
 use Windwalker\Filesystem\FileObject;
 use Windwalker\Http\Helper\ResponseHelper;
 
@@ -30,7 +32,7 @@ class GithubService
     /**
      * GithubService constructor.
      */
-    public function __construct(protected Environment $environment)
+    public function __construct(protected Environment $environment, protected Application $app)
     {
         $this->client = $this->getClient();
     }
@@ -178,7 +180,7 @@ class GithubService
             return null;
         }
 
-        $data = json_decode((string) $res->getBody(), true);
+        $data = json_decode((string) $res->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         if ($data['access_token'] ?? null) {
             return $data['access_token'];
@@ -199,13 +201,15 @@ class GithubService
      */
     public function openBrowser(string $url, IO $io): void
     {
-        // Do we conneted by SSH?
-        $output = exec('echo $SSH_CONNECTION');
+        // Do we connect by SSH?
+        if (!PlatformHelper::isWindows()) {
+            $output = $this->app->runProcess('echo $SSH_CONNECTION')->getOutput();
 
-        if (trim($output)) {
-            $io->out("Open <info>{$url}</info> from your local browser.");
+            if (trim($output)) {
+                $io->out("Open <info>{$url}</info> from your local browser.");
 
-            return;
+                return;
+            }
         }
 
         $io->ask("Press [ENTER] to open browser.");

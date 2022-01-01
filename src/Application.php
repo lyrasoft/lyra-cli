@@ -14,6 +14,7 @@ use Lyrasoft\Cli\Process\ProcessRunnerInterface;
 use Lyrasoft\Cli\Process\ProcessRunnerTrait;
 use Lyrasoft\Cli\Provider\AppProvider;
 use Symfony\Component\Console\Application as Console;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
@@ -23,6 +24,7 @@ use Windwalker\DI\ContainerAwareTrait;
 use Windwalker\Environment\PlatformHelper;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
+use Windwalker\Filesystem\Path;
 
 /**
  * The Application class.
@@ -75,6 +77,7 @@ class Application extends Console implements EventAwareInterface, ProcessRunnerI
     public function copyFile(string $file): Process
     {
         if (PlatformHelper::isWindows()) {
+            $file = Path::clean($file);
             return $this->runProcess("type {$file} | clip");
         }
 
@@ -98,5 +101,13 @@ class Application extends Console implements EventAwareInterface, ProcessRunnerI
         }
 
         throw new \RuntimeException('Copy action currently not support this OS.');
+    }
+
+    public function runCommand(string $name, array $args, ?OutputInterface $output = null): int
+    {
+        $command = $this->find($name);
+        $input = new ArrayInput($args);
+
+        return $command->run($input, $output ?? new ConsoleOutput());
     }
 }
