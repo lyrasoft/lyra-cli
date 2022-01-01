@@ -10,5 +10,8 @@
 declare(strict_types=1);
 
 return [
-    'ssh-key' => \Lyrasoft\Cli\Command\SshKeyCommand::class
+    'ssh-key' => \Lyrasoft\Cli\Command\SshKeyCommand::class,
+
+    // Github
+    'github:token' => \Lyrasoft\Cli\Command\Github\TokenCommand::class,
 ];

@@ -102,7 +102,7 @@ class SshKeyCommand implements CommandInterface
                 true,
             );
 
-            $io->out('Public key generated to: ' . $rsaPubFile);
+            $io->writeln('Public key generated to: ' . $rsaPubFile);
         }
 
         if ($io->getOption('copy')) {
@@ -127,25 +127,19 @@ class SshKeyCommand implements CommandInterface
     protected function showPublicKey(FileObject $rsaPubFile, IOInterface $io)
     {
         $io->newLine();
-        $io->out('PUBLIC KEY START')
-            ->out('----------------------------------');
+        $io->writeln('PUBLIC KEY START');
+        $io->writeln('----------------------------------');
 
-        $io->out((string) $rsaPubFile->read(), false);
+        $io->write((string) $rsaPubFile->read());
 
-        $io->out('----------------------------------')
-            ->out('PUBLIC KEY END');
+        $io->writeln('----------------------------------');
+        $io->writeln('PUBLIC KEY END');
     }
 
     protected function copy(FileObject $rsaPubFile, IO $io): void
     {
-        if (PlatformHelper::isWindows()) {
-            $this->app->runProcess("echo {$rsaPubFile->getPathname()} | clip");
-        } elseif (PlatformHelper::isUnix()) {
-            $this->app->runProcess("cat {$rsaPubFile->getPathname()} | pbcopy");
-        } else {
-            throw new \RuntimeException('Copy option currently not support this OS.');
-        }
+        $this->app->copyFile($rsaPubFile->getPathname());
 
-        $io->out('Copy SSH key to clipboard.');
+        $io->writeln('Copy SSH key to clipboard.');
     }
 }

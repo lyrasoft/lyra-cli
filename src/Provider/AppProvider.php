@@ -10,6 +10,7 @@ namespace Lyrasoft\Cli\Provider;
 
 use Lyrasoft\Cli\Application;
 use Lyrasoft\Cli\Services\EnvService;
+use Lyrasoft\Cli\Services\GithubService;
 use Lyrasoft\Cli\Services\SshService;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -48,8 +49,9 @@ class AppProvider implements ServiceProviderInterface
 
         // Services
         $container->share(Application::class, $this->app);
-        $container->prepareSharedObject(SshService::class);
         $container->prepareSharedObject(EnvService::class);
+        $container->prepareSharedObject(SshService::class);
+        $container->prepareSharedObject(GithubService::class);
 
         // Attributes
         $attributeResolver = $container->getAttributesResolver();

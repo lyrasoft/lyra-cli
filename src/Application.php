@@ -20,6 +20,7 @@ use Symfony\Component\Process\Process;
 use Windwalker\Console\CommendRegistrarTrait;
 use Windwalker\DI\Container;
 use Windwalker\DI\ContainerAwareTrait;
+use Windwalker\Environment\PlatformHelper;
 use Windwalker\Event\EventAwareInterface;
 use Windwalker\Event\EventAwareTrait;
 
@@ -69,5 +70,33 @@ class Application extends Console implements EventAwareInterface, ProcessRunnerI
                 $output->write($buffer);
             }
         };
+    }
+
+    public function copyFile(string $file): Process
+    {
+        if (PlatformHelper::isWindows()) {
+            return $this->runProcess("type {$file} | clip");
+        }
+
+        if (PlatformHelper::isUnix()) {
+            return $this->runProcess("cat {$file} | pbcopy");
+        }
+
+        throw new \RuntimeException('Copy action currently not support this OS.');
+    }
+
+    public function copyText(string $file): Process
+    {
+        $file = addslashes($file);
+
+        if (PlatformHelper::isWindows()) {
+            return $this->runProcess("echo \"{$file}\" | clip");
+        }
+
+        if (PlatformHelper::isUnix()) {
+            return $this->runProcess("echo \"{$file}\" | pbcopy");
+        }
+
+        throw new \RuntimeException('Copy action currently not support this OS.');
     }
 }
