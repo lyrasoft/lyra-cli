@@ -1,6 +1,6 @@
-name: Code Styles
+name: Code Styles for PR
 
-on: [ push ]
+on: [ pull_request ]
 
 env:
     COMPOSER_VENDOR: /home/runner/.composer/vendor
@@ -36,4 +36,4 @@ jobs:
               run: composer global require squizlabs/php_codesniffer --prefer-dist --no-suggest --no-progress
 
             - name: Detect coding standard violations
-              run: $COMPOSER_VENDOR/bin/phpcs src resources -n --extensions=php --standard=PSR12
+              run: $COMPOSER_VENDOR/bin/phpcs src resources -n --extensions=php --standard=PSR12 -q --report=checkstyle | cs2pr --graceful-warnings
