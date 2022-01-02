@@ -24,7 +24,7 @@ use function Windwalker\uid;
 /**
  * The AutoCompleteCommand class.
  */
-#[CommandWrapper(description: '')]
+#[CommandWrapper(description: 'Register autocomplete.')]
 class AutoCompleteCommand implements CommandInterface
 {
     protected IOInterface $io;

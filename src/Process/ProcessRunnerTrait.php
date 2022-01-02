@@ -60,8 +60,6 @@ trait ProcessRunnerTrait
 
         $process->setEnv($env);
 
-        $process->setWorkingDirectory(LYRA_ROOT);
-
         return $process;
     }
 
@@ -85,7 +83,7 @@ trait ProcessRunnerTrait
     public function runProcess(
         string|array|Process $process,
         mixed $input = null,
-        bool|callable|OutputInterface $output = false
+        bool|callable|OutputInterface $output = true
     ): Process {
         if (!$process instanceof Process) {
             $process = $this->createProcess($process);

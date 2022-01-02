@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 return [
     'ssh-key' => \Lyrasoft\Cli\Command\SshKeyCommand::class,
+    'pr' => \Lyrasoft\Cli\Command\PrCommand::class,
     'autocomplete' => \Lyrasoft\Cli\Command\AutoCompleteCommand::class,
     '_completion' => \Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand::class,
 

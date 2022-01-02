@@ -53,13 +53,13 @@ source ~/.bashrc
 可以用：
 
 ```bash
-lyra pstorm pull-config -a -g
+lyra pstorm:pull-config -a -g
 ```
 
 來更新 PhpStorm 的全域設定檔。也可以用：
 
 ```bash
-lyra pstorm pull-config -a
+lyra pstorm:pull-config -a
 ```
 
 單純只更新到現在的專案
@@ -67,7 +67,7 @@ lyra pstorm pull-config -a
 如果你要把自己設定好的設定檔更新到我們得 repository 給其他人分享，可以用：
 
 ```bash
-lyra pstorm push-config -a
+lyra pstorm:push-config -a
 ```
 
 **注意這個動作不要隨便進行**
@@ -109,13 +109,13 @@ lyra pstorm sniffer -p
 就會自動設定好我們的 Sniffer 設定檔，並下載我們的 Code Style 規則。第二次之後可以省略 `-p` 直接啟用 phpstorm 的 sniffer 功能。
 
 ```bash
-lyra pstorm sniffer
+lyra pstorm:sniffer
 ```
 
 如果未來我們的 Sniffer 規則有更動，只要再執行第一個指令或者再任何地方執行：
 
 ```bash
-lyra sniffer sync
+lyra sniffer:sync
 ```
 
 就會自動刷新 Sniffer 規則
@@ -127,7 +127,7 @@ lyra-cli 提供了方便的指令直接幫你註冊 GitHub SSH Key.
 執行
 
 ```
-lyra github add-ssh
+lyra github:add-ssh
 ```
 
 第一次會需要產生 SSH Key
