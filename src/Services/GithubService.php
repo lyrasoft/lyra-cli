@@ -34,8 +34,11 @@ class GithubService
     /**
      * GithubService constructor.
      */
-    public function __construct(protected Environment $environment, protected Application $app)
-    {
+    public function __construct(
+        protected Environment $environment,
+        protected Application $app,
+        protected EnvService $envService
+    ) {
         $this->client = $this->getClient();
     }
 
@@ -46,9 +49,11 @@ class GithubService
      *
      * @since  __DEPLOY_VERSION__
      */
-    public static function tokenFile(): FileObject
+    public function tokenFile(): FileObject
     {
-        return new FileObject(LYRA_TMP . '/github-token');
+        $home = $this->envService->getUserDir();
+
+        return new FileObject($home . '/.lyra/github-token');
     }
 
     /**
@@ -60,7 +65,7 @@ class GithubService
      */
     public function getStoredToken(): ?string
     {
-        $tokenFile = static::tokenFile();
+        $tokenFile = $this->tokenFile();
 
         if (is_file($tokenFile->getPathname())) {
             return trim(file_get_contents($tokenFile->getPathname()));
@@ -82,7 +87,7 @@ class GithubService
      */
     public function generateToken(IO $io): string
     {
-        $tokenFile = static::tokenFile();
+        $tokenFile = $this->tokenFile();
 
         $token = $this->deviceAuth($io);
 
@@ -284,7 +289,7 @@ class GithubService
     /**
      * prepareRepo
      *
-     * @param bool $sync
+     * @param  bool  $sync
      *
      * @return  bool
      *

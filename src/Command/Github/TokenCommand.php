@@ -58,7 +58,7 @@ class TokenCommand implements CommandInterface
     public function execute(IOInterface $io): int
     {
         if ($io->getOption('clear')) {
-            $this->githubService::tokenFile()->deleteIfExists();
+            $this->githubService->tokenFile()->deleteIfExists();
 
             $io->writeln('Clear Github token.');
             return 0;
