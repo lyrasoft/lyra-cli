@@ -48,6 +48,13 @@ class SnifferCommand implements CommandInterface
             InputOption::VALUE_NONE,
             'Also update phpcs executable path.'
         );
+
+        $command->addOption(
+            'ww3',
+            '',
+            InputOption::VALUE_NONE,
+            'Use Windwalker 3 PSR-12 Rules.'
+        );
     }
 
     public function execute(IOInterface $io): int
@@ -63,7 +70,7 @@ class SnifferCommand implements CommandInterface
         $io->style()->title('Updating current project settings');
 
         $this->updateSnifferSetting();
-        
+
         return 0;
     }
 
@@ -129,6 +136,7 @@ class SnifferCommand implements CommandInterface
      *
      * @return  void
      *
+     * @throws \Exception
      * @since  __DEPLOY_VERSION__
      */
     protected function updateSnifferSetting(): void
@@ -142,7 +150,9 @@ class SnifferCommand implements CommandInterface
         $configFile = $idea . '/inspectionProfiles/Project_Default.xml';
 
         if (!is_file($configFile)) {
-            Filesystem::write($configFile, <<<XML
+            Filesystem::write(
+                $configFile,
+                <<<XML
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
@@ -162,16 +172,21 @@ XML
             $tool->addAttribute('class', 'PhpCSValidationInspection');
         }
 
-        $tool['enabled']            = 'true';
-        $tool['level']              = 'WEAK WARNING';
+        $tool['enabled'] = 'true';
+        $tool['level'] = 'WEAK WARNING';
         $tool['enabled_by_default'] = 'true';
 
-        static::addOrCreateOptionWithValue($tool, 'CODING_STANDARD', 'Custom');
-        static::addOrCreateOptionWithValue(
-            $tool,
-            'CUSTOM_RULESET_PATH',
-            DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker'
-        );
+        if ($this->io->getOption('ww3')) {
+            static::addOrCreateOptionWithValue($tool, 'CODING_STANDARD', 'Custom');
+            static::addOrCreateOptionWithValue(
+                $tool,
+                'CUSTOM_RULESET_PATH',
+                DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker'
+            );
+        } else {
+            static::addOrCreateOptionWithValue($tool, 'CODING_STANDARD', 'PSR12');
+        }
+
         static::addOrCreateOptionWithValue($tool, 'CHECK_INC', 'false');
         static::addOrCreateOptionWithValue($tool, 'CHECK_JS', 'false');
         static::addOrCreateOptionWithValue($tool, 'CHECK_CSS', 'false');
@@ -183,10 +198,12 @@ XML
 
         file_put_contents($configFile, $dom->saveXML());
 
-        $this->io->writeln(sprintf(
-                       'Use <info>%s</info> as phpcs ruleset path.',
-                       DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker'
-                   ));
+        $this->io->writeln(
+            sprintf(
+                'Use <info>%s</info> as phpcs ruleset path.',
+                DevtoolsHelper::getLocalPath() . '/Sniffer/Windwalker'
+            )
+        );
 
         $this->io->writeln('Enable PHP Sniffer for current project.');
     }
