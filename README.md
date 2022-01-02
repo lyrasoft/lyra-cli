@@ -44,6 +44,18 @@ echo 'export PATH="$PATH:$HOME/.config/composer/vendor/bin"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
+## 自動完成
+
+只要輸入一次
+
+```shell
+lyra autocomplete
+```
+
+註冊好自動完成的指令後，之後就可以用 Tab 自動完成指令了
+
+> 只支援 zsh
+
 ## 常用功能說明
 
 ### 更新 PhpStorm 設定檔
