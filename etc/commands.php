@@ -16,4 +16,9 @@ return [
     'github:add-ssh' => \Lyrasoft\Cli\Command\Github\AddSshCommand::class,
     'github:deploy-key' => \Lyrasoft\Cli\Command\Github\DeployKeyCommand::class,
     'github:token' => \Lyrasoft\Cli\Command\Github\TokenCommand::class,
+
+    // Pstorm
+    'pstorm:pull-config' => \Lyrasoft\Cli\Command\Pstorm\PullConfigCommand::class,
+    'pstorm:push-config' => \Lyrasoft\Cli\Command\Pstorm\PushConfigCommand::class,
+    'pstorm:sniffer' => \Lyrasoft\Cli\Command\Pstorm\SnifferCommand::class,
 ];

@@ -14,6 +14,8 @@ namespace Lyrasoft\Cli\Services;
 use Github\AuthMethod;
 use Github\Client;
 use Lyrasoft\Cli\Application;
+use Lyrasoft\Cli\Helper\DevtoolsHelper;
+use Symfony\Component\Process\Process;
 use Windwalker\Console\IO;
 use Windwalker\Environment\Environment;
 use Windwalker\Environment\PlatformHelper;
@@ -277,5 +279,67 @@ class GithubService
         }
 
         return $this->client = Client::createWithHttpClient(new \GuzzleHttp\Client());
+    }
+
+    /**
+     * prepareRepo
+     *
+     * @param bool $sync
+     *
+     * @return  bool
+     *
+     * @since  __DEPLOY_VERSION__
+     */
+    public function prepareRepo(bool $sync = true): bool
+    {
+        $repoLocalPath = DevtoolsHelper::getLocalPath();
+
+        if (!is_dir($repoLocalPath . '/.git')) {
+            $this->app->createProcess(
+                'git clone git@github.com:' . DevtoolsHelper::REPO . '.git ' . DevtoolsHelper::TMP_FOLDER
+            )
+                ->setWorkingDirectory(LYRA_TMP)
+                ->run($this->app->getProcessOutputCallback());
+        }
+
+        if ($sync) {
+            $this->app->createProcess('git checkout master')
+                ->setWorkingDirectory($repoLocalPath)
+                ->run($this->app->getProcessOutputCallback());
+
+            $this->app->createProcess('git pull origin master')
+                ->setWorkingDirectory($repoLocalPath)
+                ->run($this->app->getProcessOutputCallback());
+        }
+
+        return true;
+    }
+
+    /**
+     * pushRepo
+     *
+     * @return  mixed
+     *
+     * @throws \Exception
+     * @since  __DEPLOY_VERSION__
+     */
+    public function pushRepo(): void
+    {
+        $localPath = DevtoolsHelper::getLocalPath();
+        $date = new \DateTime();
+
+        $this->runProcessAt('git add --all', $localPath);
+        $this->runProcessAt(
+            'git commit -am "Update by lyra-cli on: ' . $date->format('Y-m-d H:i:s') . '"',
+            $localPath
+        );
+        $this->runProcessAt('git push', $localPath);
+    }
+
+    protected function runProcessAt(string $cmd, string $cwd): int
+    {
+        return $this->app->createProcess($cmd)
+            ->setWorkingDirectory($cwd)
+            ->run($this->app->getProcessOutputCallback());
     }
 }

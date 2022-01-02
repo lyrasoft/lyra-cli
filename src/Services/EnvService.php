@@ -13,6 +13,7 @@ namespace Lyrasoft\Cli\Services;
 
 use Symfony\Component\Console\Question\Question;
 use Windwalker\Console\IOInterface;
+use Windwalker\Environment\Environment;
 use Windwalker\Http\Output\OutputInterface;
 
 /**
@@ -20,6 +21,25 @@ use Windwalker\Http\Output\OutputInterface;
  */
 class EnvService
 {
+    public function __construct(protected Environment $environment)
+    {
+    }
+
+    public function isWindows(): bool
+    {
+        return $this->environment->getPlatform()->isWindows();
+    }
+
+    public function isMac(): bool
+    {
+        return $this->environment->getPlatform()->getUname() === 'Darwin';
+    }
+
+    public function isLinux(): bool
+    {
+        return $this->environment->getPlatform()->isLinux();
+    }
+
     public function getUserDir(): string
     {
         return $_SERVER['HOME'] ?? $_SERVER['USERPROFILE'];

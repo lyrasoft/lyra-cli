@@ -60,7 +60,7 @@ class Application extends Console implements EventAwareInterface, ProcessRunnerI
         $this->container->registerServiceProvider(new AppProvider($this));
     }
 
-    protected function getProcessOutputCallback(?OutputInterface $output = null): callable
+    public function getProcessOutputCallback(?OutputInterface $output = null): callable
     {
         $output ??= new ConsoleOutput();
         $err    = $output->getErrorOutput();
