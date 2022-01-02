@@ -37,7 +37,7 @@ class DeployKeyCommand implements CommandInterface
         protected SshService $sshService,
         protected EnvService $envService,
     ) {
-
+        //
     }
 
     public function configure(Command $command): void

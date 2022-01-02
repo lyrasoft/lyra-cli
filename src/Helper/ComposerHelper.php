@@ -1,10 +1,13 @@
 <?php
+
 /**
  * Part of lyra-cli project.
  *
  * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
  * @license    __LICENSE__
  */
+
+declare(strict_types=1);
 
 namespace Lyrasoft\Cli\Helper;
 

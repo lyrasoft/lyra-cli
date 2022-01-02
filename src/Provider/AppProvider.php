@@ -1,10 +1,13 @@
 <?php
+
 /**
  * Part of lyra-cli project.
  *
  * @copyright  Copyright (C) 2018 ${ORGANIZATION}.
  * @license    __LICENSE__
  */
+
+declare(strict_types=1);
 
 namespace Lyrasoft\Cli\Provider;
 
@@ -13,11 +16,8 @@ use Lyrasoft\Cli\Services\EnvService;
 use Lyrasoft\Cli\Services\GithubService;
 use Lyrasoft\Cli\Services\PstormService;
 use Lyrasoft\Cli\Services\SshService;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Windwalker\Attributes\AttributeType;
 use Windwalker\Console\CommandWrapper;
-use Windwalker\Console\IO;
 use Windwalker\DI\Container;
 use Windwalker\DI\ServiceProviderInterface;
 use Windwalker\Environment\Environment;
@@ -37,7 +37,7 @@ class AppProvider implements ServiceProviderInterface
     /**
      * Registers the service provider with a DI container.
      *
-     * @param   Container $container The DI container.
+     * @param  Container  $container  The DI container.
      *
      * @return  void
      */

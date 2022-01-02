@@ -96,8 +96,8 @@ class PullConfigCommand implements CommandInterface
 
             /** @var FileObject $file */
             foreach ($files as $file) {
-                $srcFile = DevtoolsHelper::getLocalPath(
-                    ) . '/Editor/PHPStorm/' . $configName . '/' . $file->getRelativePathname();
+                $srcFile = DevtoolsHelper::getLocalPath()
+                    . '/Editor/PHPStorm/' . $configName . '/' . $file->getRelativePathname();
 
                 $destFile = $configFolder . '/' . $configName . '/' . $file->getRelativePathname();
 

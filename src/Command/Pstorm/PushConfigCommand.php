@@ -6,6 +6,7 @@
  * @copyright  Copyright (C) 2022 __ORGANIZATION__.
  * @license    __LICENSE__
  */
+
 declare(strict_types=1);
 
 namespace Lyrasoft\Cli\Command\Pstorm;
@@ -52,7 +53,9 @@ class PushConfigCommand implements CommandInterface
         ];
 
         if (!\in_array(true, $configs, true)) {
-            throw new \RuntimeException('Please provide at least one config name or use -a|--all to handle all supported configs.');
+            throw new \RuntimeException(
+                'Please provide at least one config name or use -a|--all to handle all supported configs.'
+            );
         }
 
         $io->writeln('You will push these configs:');
@@ -82,7 +85,8 @@ class PushConfigCommand implements CommandInterface
             foreach ($files as $file) {
                 $srcFile = $configFolder . '/' . $configName . '/' . $file->getRelativePathname();
 
-                $destFile = DevtoolsHelper::getLocalPath() . '/Editor/PHPStorm/' . $configName . '/' . $file->getRelativePathname();
+                $destFile = DevtoolsHelper::getLocalPath()
+                    . '/Editor/PHPStorm/' . $configName . '/' . $file->getRelativePathname();
 
                 $io->writeln(sprintf('[Updated] <info>%s</info>', $srcFile));
 
