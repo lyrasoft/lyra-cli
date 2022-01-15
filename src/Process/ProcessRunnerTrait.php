@@ -34,7 +34,7 @@ trait ProcessRunnerTrait
     {
         $process = is_array($script) ?
             new Process($script)
-            : Process::fromShellCommandline($script);
+            : Process::fromShellCommandline($script, null, []);
 
         $process->setTimeout(0);
         $process->setIdleTimeout(0);
