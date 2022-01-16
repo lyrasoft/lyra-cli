@@ -105,22 +105,6 @@ class PullConfigCommand implements CommandInterface
 
                 Filesystem::write($destFile, file_get_contents($srcFile));
             }
-
-            if ($configName === 'fileTemplates' && $this->envService->isWindows()) {
-                $io->writeln(
-                    sprintf(
-                        'Move: %s to %s',
-                        $configFolder . '/' . $configName,
-                        Path::normalize($configFolder . '/..')
-                    )
-                );
-
-                Filesystem::move(
-                    $configFolder . '/' . $configName,
-                    $configFolder . '/../' . $configName,
-                    true
-                );
-            }
         }
 
         $io->writeln('Update config completed');

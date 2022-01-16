@@ -38,7 +38,7 @@ class PstormService
         } elseif ($this->envService->isWindows()) {
             $folderPatterns = [
                 $home . '/.PhpStorm*/config',
-                $home . '/AppData/Roaming/JetBrains/PhpStorm*/jba_config',
+                $home . '/AppData/Roaming/JetBrains/PhpStorm*',
             ];
         } else {
             throw new \RuntimeException('Only support Mac and Windows now.');
