@@ -27,17 +27,17 @@ class EnvService
 
     public function isWindows(): bool
     {
-        return $this->environment->getPlatform()->isWindows();
+        return $this->environment::isWindows();
     }
 
     public function isMac(): bool
     {
-        return $this->environment->getPlatform()->getUname() === 'Darwin';
+        return $this->environment::getUname() === 'Darwin';
     }
 
     public function isLinux(): bool
     {
-        return $this->environment->getPlatform()->isLinux();
+        return $this->environment::isLinux();
     }
 
     public function getUserDir(): string

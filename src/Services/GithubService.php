@@ -221,7 +221,7 @@ class GithubService
 
         $io->ask("Press [ENTER] to open browser.");
 
-        $cmd = $this->environment->getPlatform()->isWindows()
+        $cmd = $this->environment::isWindows()
             ? 'explorer'
             : 'open';
 

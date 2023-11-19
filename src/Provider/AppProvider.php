@@ -45,7 +45,6 @@ class AppProvider implements ServiceProviderInterface
     {
         $container->share(Container::class, $container);
 
-        $container->prepareSharedObject(Platform::class);
         $container->prepareSharedObject(Environment::class);
 
         // Services
