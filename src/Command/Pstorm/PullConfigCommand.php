@@ -17,12 +17,12 @@ use Lyrasoft\Cli\Services\EnvService;
 use Lyrasoft\Cli\Services\GithubService;
 use Lyrasoft\Cli\Services\PstormService;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 use Windwalker\Console\CommandInterface;
 use Windwalker\Console\CommandWrapper;
 use Windwalker\Console\IOInterface;
 use Windwalker\Filesystem\FileObject;
 use Windwalker\Filesystem\Filesystem;
-use Windwalker\Filesystem\Path;
 
 /**
  * The PullConfigCommand class.
@@ -36,13 +36,19 @@ class PullConfigCommand implements CommandInterface
         protected Application $app,
         protected EnvService $envService,
         protected PstormService $pstormService,
-        protected GithubService $githubService
-    ) {
-    }
+        protected GithubService $githubService,
+    ) {}
 
     public function configure(Command $command): void
     {
         $this->registerArgs($command);
+
+        $command->addOption(
+            'clear',
+            null,
+            InputOption::VALUE_NONE,
+            'Clear current config folder first.',
+        );
     }
 
     public function execute(IOInterface $io): int
@@ -55,17 +61,18 @@ class PullConfigCommand implements CommandInterface
 
         if (!\in_array(true, $configs, true)) {
             throw new \RuntimeException(
-                'Please provide at least one config name or use -a|--all to handle all supported configs.'
+                'Please provide at least one config name or use -a|--all to handle all supported configs.',
             );
         }
 
         $global = $io->getOption('global');
+        $clear = $io->getOption('clear');
 
         $io->writeln(
             sprintf(
                 'You will pull these configs to <comment>%s</comment>:',
-                $global ? 'PhpStorm global config' : 'Current Project'
-            )
+                $global ? 'PhpStorm global config' : 'Current Project',
+            ),
         );
 
         foreach ($configs as $configName => $enabled) {
@@ -89,17 +96,21 @@ class PullConfigCommand implements CommandInterface
             $io->writeln(sprintf('## Start Copy: <comment>%s</comment>', $configName));
             $io->newLine();
 
-            $files = Filesystem::files(
-                DevtoolsHelper::getLocalPath() . '/Editor/PHPStorm/' . $configName,
-                true
-            );
+            $configDestFolder = $configFolder . '/' . $configName;
+            $path = DevtoolsHelper::getLocalPath() . '/Editor/PHPStorm/' . $configName;
+
+            if ($clear) {
+                Filesystem::deleteIfExists($configDestFolder);
+                Filesystem::mkdir($configDestFolder);
+            }
+
+            $files = Filesystem::files($path, true);
 
             /** @var FileObject $file */
             foreach ($files as $file) {
-                $srcFile = DevtoolsHelper::getLocalPath()
-                    . '/Editor/PHPStorm/' . $configName . '/' . $file->getRelativePathname();
+                $srcFile = $path . '/' . $file->getRelativePathname();
 
-                $destFile = $configFolder . '/' . $configName . '/' . $file->getRelativePathname();
+                $destFile = $configDestFolder . '/' . $file->getRelativePathname();
 
                 $io->writeln(sprintf('[Updated] <info>%s</info>', $destFile));
 
