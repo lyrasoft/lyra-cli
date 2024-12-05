@@ -203,13 +203,11 @@ class GithubService
      * @param  IO      $io
      *
      * @return  void
-     *
-     * @since  __DEPLOY_VERSION__
      */
     public function openBrowser(string $url, IO $io): void
     {
         // Do we connect by SSH?
-        if (!PlatformHelper::isWindows()) {
+        if (!Environment::isWindows()) {
             $output = $this->app->runProcess('echo $SSH_CONNECTION')->getOutput();
 
             if (trim($output)) {
@@ -219,6 +217,7 @@ class GithubService
             }
         }
 
+        $io->out("Open <info>{$url}</info> from your local browser.");
         $io->ask("Press [ENTER] to open browser.");
 
         $cmd = $this->environment::isWindows()
