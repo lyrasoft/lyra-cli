@@ -22,6 +22,7 @@ use Windwalker\Console\CommandWrapper;
 use Windwalker\Console\Input\InputArgument;
 use Windwalker\Console\IOInterface;
 use Windwalker\Data\Collection;
+use Windwalker\Environment\Environment;
 use Windwalker\Environment\PlatformHelper;
 use Windwalker\Filesystem\Filesystem;
 
@@ -111,7 +112,7 @@ class DeployKeyCommand implements CommandInterface
 
         $refresh = $io->getOption('refresh');
 
-        if (!PlatformHelper::isWindows()) {
+        if (!Environment::isWindows()) {
             $r = $this->app->runProcess('ssh-add')->getExitCode();
 
             if ($r === 2) {
