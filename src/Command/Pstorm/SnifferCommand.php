@@ -219,7 +219,7 @@ XML
      *
      * @since  __DEPLOY_VERSION__
      */
-    public static function addOrCreateOptionWithValue(\SimpleXMLElement $tool, string $name, string $value = null): void
+    public static function addOrCreateOptionWithValue(\SimpleXMLElement $tool, string $name, ?string $value = null): void
     {
         $option = $tool->xpath('//option[@name="' . $name . '"]')[0] ?? null;
 
