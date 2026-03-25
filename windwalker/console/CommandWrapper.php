@@ -97,7 +97,7 @@ class CommandWrapper extends Command implements ContainerAttributeInterface
     /**
      * @inheritDoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = $this->getIO($input, $output);
 
