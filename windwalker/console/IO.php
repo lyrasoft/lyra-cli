@@ -552,6 +552,11 @@ class IO implements IOInterface
         $this->style()->newLine($count);
     }
 
+    public function isSilent(): bool
+    {
+        return $this->output->isSilent();
+    }
+
     public function __toString(): string
     {
         return $this->input->__toString();
