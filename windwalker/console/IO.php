@@ -236,7 +236,7 @@ class IO implements IOInterface
      *
      * @return mixed The option value
      */
-    public function getParameterOption($values, $default = false, bool $onlyParams = false)
+    public function getParameterOption(string|array $values, string|bool|int|float|array|null $default = false, bool $onlyParams = false): mixed
     {
         return $this->input->getParameterOption($values, $default, $onlyParams);
     }
@@ -550,5 +550,10 @@ class IO implements IOInterface
     public function newLine(int $count = 1): void
     {
         $this->style()->newLine($count);
+    }
+
+    public function __toString(): string
+    {
+        return $this->input->__toString();
     }
 }
